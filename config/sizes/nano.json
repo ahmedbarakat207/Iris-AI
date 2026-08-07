@@ -1,0 +1,41 @@
+{
+  "models": {
+    "triage": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "router": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "math": "nvidia/OpenMath-Nemotron-1.5B-Instruct",
+    "code": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "reasoning": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "general": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "vision": "vikhyatk/moondream2",
+    "stt": "distil-whisper/distil-small.en",
+    "tts": "rhasspy/piper-voices"
+  },
+  "gguf": {
+    "triage": "iris_001.gguf",
+    "router": "iris_001.gguf",
+    "code": "iris_002.gguf",
+    "reasoning": "iris_003.gguf",
+    "general": "iris_003.gguf",
+    "math": "iris_004.gguf",
+    "vision": "iris_005.gguf"
+  },
+  "clip": "iris_006.gguf",
+  "context_length": 32768,
+  "download_urls": {
+    "iris_001.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF/resolve/main/qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+    "iris_002.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/resolve/main/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "iris_003.gguf": "https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
+    "iris_004.gguf": "https://huggingface.co/lmstudio-community/OpenMath-Nemotron-1.5B-GGUF/resolve/main/OpenMath-Nemotron-1.5B-Q4_K_M.gguf",
+    "iris_005.gguf": "https://huggingface.co/moondream/moondream2-gguf/resolve/main/moondream2-text-model-f16.gguf",
+    "iris_006.gguf": "https://huggingface.co/moondream/moondream2-gguf/resolve/main/moondream2-mmproj-f16.gguf"
+  },
+  "source_filenames": {
+    "triage": "iris_001.gguf",
+    "router": "iris_001.gguf",
+    "code": "iris_002.gguf",
+    "reasoning": "iris_003.gguf",
+    "general": "iris_003.gguf",
+    "math": "iris_004.gguf",
+    "vision": "iris_005.gguf"
+  }
+}

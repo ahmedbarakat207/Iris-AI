@@ -1,0 +1,48 @@
+{
+  "models": {
+    "triage": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "router": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "control": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "math": "Qwen/QwQ-32B",
+    "code": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "reasoning": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    "general": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    "vision": "Qwen/Qwen3-VL-8B-Instruct",
+    "stt": "UsefulSensors/moonshine-base",
+    "tts": "hexgrad/Kokoro-82M"
+  },
+  "gguf": {
+    "triage": "iris_001.gguf",
+    "router": "iris_004.gguf",
+    "control": "iris_004.gguf",
+    "math": "iris_003.gguf",
+    "code": "iris_004.gguf",
+    "reasoning": "iris_005.gguf",
+    "general": "iris_005.gguf",
+    "vision": "iris_006.gguf"
+  },
+  "clip": "iris_007.gguf",
+  "max_pool_size": 1,
+  "max_seq_length": 1024,
+  "num_layers": -1,
+  "context_length": 32768,
+  "download_urls": {
+    "qwen2.5-coder-7b-instruct-q4_k_m.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf": "https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/resolve/main/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "qwq-32b-q4_k_m.gguf": "https://huggingface.co/unsloth/QwQ-32B-GGUF/resolve/main/QwQ-32B-Q4_K_M.gguf",
+    "DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf": "https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf",
+    "Qwen3-VL-8B-Instruct-Q4_K_M.gguf": "https://huggingface.co/unsloth/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3-VL-8B-Instruct-Q4_K_M.gguf",
+    "mmproj-Qwen3-VL-8B-F16.gguf": "https://huggingface.co/unsloth/Qwen3-VL-8B-Instruct-GGUF/resolve/main/mmproj-F16.gguf"
+  },
+  "source_filenames": {
+    "triage": "qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "router": "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "control": "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "math": "qwq-32b-q4_k_m.gguf",
+    "code": "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "reasoning": "DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf",
+    "general": "DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf",
+    "vision": "Qwen3-VL-8B-Instruct-Q4_K_M.gguf",
+    "clip": "mmproj-Qwen3-VL-8B-F16.gguf"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "models": {
+    "triage": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "router": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "control": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "math": "Qwen/Qwen2.5-Math-7B-Instruct",
+    "code": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "reasoning": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "general": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "vision": "llava-hf/llava-1.5-7b-hf",
+    "stt": "UsefulSensors/moonshine-base",
+    "tts": "hexgrad/Kokoro-82M"
+  },
+  "gguf": {
+    "triage": "iris_001.gguf",
+    "router": "iris_001.gguf",
+    "control": "iris_002.gguf",
+    "math": "iris_003.gguf",
+    "code": "iris_004.gguf",
+    "reasoning": "iris_005.gguf",
+    "general": "iris_005.gguf",
+    "vision": "iris_006.gguf"
+  },
+  "clip": "iris_007.gguf",
+  "max_pool_size": 1,
+  "max_seq_length": 512,
+  "num_layers": 8,
+  "context_length": 32768,
+  "download_urls": {
+    "qwen2.5-coder-3b-instruct-q4_k_m.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct-GGUF/resolve/main/qwen2.5-coder-3b-instruct-q4_k_m.gguf",
+    "qwen2.5-math-7b-instruct-q4_k_m.gguf": "https://huggingface.co/bartowski/Qwen2.5-Math-7B-Instruct-GGUF/resolve/main/Qwen2.5-Math-7B-Instruct-Q4_K_M.gguf",
+    "qwen2.5-coder-7b-instruct-q4_k_m.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf": "https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
+    "iris_006.gguf": "https://huggingface.co/mys/ggml_llava-v1.5-7b/resolve/main/ggml-model-q4_k.gguf",
+    "iris_007.gguf": "https://huggingface.co/mys/ggml_llava-v1.5-7b/resolve/main/mmproj-model-f16.gguf"
+  },
+  "source_filenames": {
+    "triage": "qwen2.5-coder-3b-instruct-q4_k_m.gguf",
+    "router": "qwen2.5-coder-3b-instruct-q4_k_m.gguf",
+    "control": "qwen2.5-coder-3b-instruct-q4_k_m.gguf",
+    "math": "qwen2.5-math-7b-instruct-q4_k_m.gguf",
+    "code": "qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "reasoning": "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
+    "general": "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
+    "vision": "iris_006.gguf"
+  }
+}

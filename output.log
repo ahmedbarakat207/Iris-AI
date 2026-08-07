@@ -1,0 +1,127 @@
+[INFO] Starting Iris AI — Local GGUF Multi-Model Routing System
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.8.93:5050
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [05/Jul/2026 04:12:43] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:13:30] "POST /chat HTTP/1.1" 200 -
+[INFO] Lazy-loading RAG Knowledge Base...
+[RAG] Loading embedding model (all-MiniLM-L6-v2)...
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 12548.68it/s]
+[RAG] Found 40 files across categories: ['coding', 'general']
+[RAG] Loaded 809 chunks from disk cache (skipped re-encode).
+[Iris] Prefetching model pages into OS cache: iris_005.gguf
+[Iris] Prefetching model pages into OS cache: iris_004.gguf
+[Iris] Online language detection: detected 'en' -> 'English'
+[Iris] Prefetching model pages into OS cache: iris_001.gguf
+[Iris] Instantiating Llama: model=/run/media/hamdy/Hamdy/IRIS/IRIS/iris-Ai/models/iris_001.gguf, n_gpu_layers=-1, n_threads=8, main_gpu=0, tensor_split=None
+127.0.0.1 - - [05/Jul/2026 04:15:27] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:27] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:28] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:29] "GET /get_settings HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/voice_style.css?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/scriptchat.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/script.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/voice.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/settings.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/setup.js?v=15 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/logo-dark.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:58] "[36mGET /static/logo-light.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/Jul/2026 04:15:59] "GET /get_settings HTTP/1.1" 200 -
+[Triage] Raw answer: '{"route": "CODE_COMPLEX", "keywords": "", "confidence": 0.95}'
+/usr/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-23330-qq9kg7mu'}
+  warnings.warn(

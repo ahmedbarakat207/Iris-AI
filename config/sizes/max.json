@@ -1,0 +1,51 @@
+{
+  "models": {
+    "triage": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "router": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "control": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "math": "Qwen/Qwen2.5-Math-72B-Instruct",
+    "code": "Qwen/Qwen2.5-72B-Instruct",
+    "reviewer": "Qwen/Qwen2.5-72B-Instruct",
+    "reasoning": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    "general": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    "vision": "openbmb/MiniCPM-V-2_6",
+    "stt": "UsefulSensors/moonshine-base",
+    "tts": "hexgrad/Kokoro-82M"
+  },
+  "gguf": {
+    "triage": "iris_001.gguf",
+    "router": "iris_002.gguf",
+    "control": "iris_002.gguf",
+    "math": "iris_003.gguf",
+    "code": "iris_004.gguf",
+    "reviewer": "iris_004.gguf",
+    "reasoning": "iris_005.gguf",
+    "general": "iris_005.gguf",
+    "vision": "iris_006.gguf"
+  },
+  "clip": "iris_007.gguf",
+  "max_pool_size": 1,
+  "max_seq_length": 1024,
+  "num_layers": -1,
+  "context_length": 32768,
+  "download_urls": {
+    "qwen2.5-coder-7b-instruct-q4_k_m.gguf": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf": "https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/resolve/main/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "qwen2.5-math-72b-instruct-q4_k_m.gguf": "https://huggingface.co/bartowski/Qwen2.5-Math-72B-Instruct-GGUF/resolve/main/Qwen2.5-Math-72B-Instruct-Q4_K_M.gguf",
+    "Qwen2.5-72B-Instruct-Q4_K_M.gguf": "https://huggingface.co/bartowski/Qwen2.5-72B-Instruct-GGUF/resolve/main/Qwen2.5-72B-Instruct-Q4_K_M.gguf",
+    "DeepSeek-R1-Distill-Llama-70B-Q4_K_M.gguf": "https://huggingface.co/unsloth/DeepSeek-R1-Distill-Llama-70B-GGUF/resolve/main/DeepSeek-R1-Distill-Llama-70B-Q4_K_M.gguf",
+    "iris_006.gguf": "https://huggingface.co/openbmb/MiniCPM-V-2_6-gguf/resolve/main/ggml-model-Q4_K_M.gguf",
+    "iris_007.gguf": "https://huggingface.co/openbmb/MiniCPM-V-2_6-gguf/resolve/main/mmproj-model-f16.gguf"
+  },
+  "source_filenames": {
+    "triage": "qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+    "router": "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "control": "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf",
+    "math": "qwen2.5-math-72b-instruct-q4_k_m.gguf",
+    "code": "Qwen2.5-72B-Instruct-Q4_K_M.gguf",
+    "reviewer": "Qwen2.5-72B-Instruct-Q4_K_M.gguf",
+    "reasoning": "DeepSeek-R1-Distill-Llama-70B-Q4_K_M.gguf",
+    "general": "DeepSeek-R1-Distill-Llama-70B-Q4_K_M.gguf",
+    "vision": "iris_006.gguf"
+  }
+}

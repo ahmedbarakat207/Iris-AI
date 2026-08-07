@@ -1,0 +1,34 @@
+[INFO] Starting Iris AI — Local GGUF Multi-Model Routing System
+[INFO] Loading RAG Knowledge Base...
+[RAG] Loading embedding model (all-MiniLM-L6-v2)...
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4751.79it/s]
+[RAG] Found 44 files across categories: ['coding', 'general']
+[RAG] Loaded 146 chunks from disk cache (skipped re-encode).
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.13:5050
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [13/Jul/2026 15:39:47] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "GET /static/logo-dark.png HTTP/1.1" 200 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/voice_style.css?v=21 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "GET /static/logo-light.png HTTP/1.1" 200 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/vendor/purify.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/style.css?v=21 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/vendor/marked.min.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/script.js?v=16 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/voice.js?v=16 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/setup.js?v=16 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "GET /static/scriptchat.js?v=21 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "[36mGET /static/settings.js?v=16 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Jul/2026 15:39:47] "GET /get_settings HTTP/1.1" 200 -
+Frontend messages raw: [{"role":"user","content":"Hi","displayText":"Hi","imageUrl":null,"attachmentName":null}]
+127.0.0.1 - - [13/Jul/2026 15:39:51] "POST /chat HTTP/1.1" 200 -
+[Iris] Online language detection: detected 'en' -> 'English'
+[Triage] Pre-filter override: query matched GENERAL pattern (reason='greeting'); routing directly to GENERAL.
+[Iris] Online language detection: detected 'en' -> 'English'
+[Iris] Instantiating Llama: model=/Users/ahmed/Iris-AI/models/iris_005.gguf, n_gpu_layers=-1, n_threads=4, main_gpu=0, tensor_split=None
+/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:475: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-7435-otruo4yh'}
+  warnings.warn(

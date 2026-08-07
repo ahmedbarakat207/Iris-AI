@@ -1,0 +1,138 @@
+/* Voice Chat Styles Overhaul */
+.voice-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 20, 0.95);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.voice-modal.visible {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.voice-modal-content {
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 20px 40px;
+}
+
+#voiceStatusText {
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.voice-visualizer-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.voice-orb {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--iris-purple) 0%, rgba(163, 133, 255, 0.6) 50%, transparent 100%);
+    box-shadow: 0 0 40px rgba(163, 133, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5);
+    transition: transform 0.1s ease-out, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* States */
+.voice-orb.idle {
+    transform: scale(1);
+    background: radial-gradient(circle, #555 0%, #333 50%, transparent 100%);
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.voice-orb.processing {
+    background: radial-gradient(circle, #ffaa00 0%, rgba(255, 170, 0, 0.6) 50%, transparent 100%);
+    box-shadow: 0 0 40px rgba(255, 170, 0, 0.4);
+    animation: orbPulse 1s infinite alternate;
+}
+
+.voice-orb.speaking {
+    background: radial-gradient(circle, #4caf50 0%, rgba(76, 175, 80, 0.6) 50%, transparent 100%);
+    box-shadow: 0 0 40px rgba(76, 175, 80, 0.4);
+}
+
+.voice-orb.muted {
+    background: radial-gradient(circle, #ff4b4b 0%, rgba(255, 75, 75, 0.6) 50%, transparent 100%);
+    box-shadow: 0 0 20px rgba(255, 75, 75, 0.2);
+    transform: scale(0.9) !important;
+}
+
+@keyframes orbPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+}
+
+.voice-transcription {
+    font-size: 16px;
+    color: var(--text-primary);
+    max-height: 80px;
+    overflow-y: auto;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    display: none;
+    max-width: 600px;
+    text-align: center;
+}
+
+.voice-toolbar {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.voice-tool-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    backdrop-filter: blur(5px);
+}
+
+.voice-tool-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.voice-tool-btn:active {
+    transform: scale(0.95);
+}
+
+.voice-tool-btn.hangup-btn {
+    background: #ff4b4b;
+}
+
+.voice-tool-btn.hangup-btn:hover {
+    background: #ff6b6b;
+}
+
+.voice-tool-btn.muted {
+    background: rgba(255, 255, 255, 0.3);
+    color: #ff4b4b;
+}

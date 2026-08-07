@@ -1,0 +1,7 @@
+Benchmark,Passed,Total,Percentage
+GPQA [Iris Tiny],1,5,20.0%
+GSM8K [Iris Tiny],81,100,81.0%
+HumanEval [Iris Tiny],84,100,84.0%
+MATH [Iris Tiny],55,100,55.0%
+MMLU [Iris Tiny],72,84,85.7%
+SWE [Iris Tiny],1,3,33.3%

@@ -1,0 +1,253 @@
+{
+  "triage": {
+    "huggingface": [
+      {
+        "path": "MBZUAI-Paris/Egyptian-SFT-Mixture",
+        "max_samples": 8000
+      },
+      {
+        "path": "HuggingFaceH4/ultrachat_200k",
+        "max_samples": 8000
+      },
+      {
+        "path": "OpenAssistant/oasst1",
+        "max_samples": 8000
+      },
+      {
+        "path": "blended_skill_talk",
+        "max_samples": 8000
+      },
+      {
+        "path": "daily_dialog",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/triage",
+      "training/shared"
+    ]
+  },
+  "router": {
+    "huggingface": [
+      {
+        "path": "NousResearch/hermes-function-calling-v1",
+        "max_samples": 8000
+      },
+      {
+        "path": "Jofthomas/hermes-function-calling-thinking-V1",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/control",
+      "training/shared"
+    ]
+  },
+  "math": {
+    "huggingface": [
+      {
+        "path": "AI-MO/NuminaMath-CoT",
+        "max_samples": 8000
+      },
+      {
+        "path": "meta-math/MetaMathQA",
+        "max_samples": 8000
+      },
+      {
+        "path": "EleutherAI/hendrycks_math",
+        "max_samples": 8000
+      },
+      {
+        "path": "deepmind/math_dataset",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/math",
+      "training/shared"
+    ]
+  },
+  "code": {
+    "huggingface": [
+      {
+        "path": "ise-uiuc/Magicoder-OSS-Instruct-75K",
+        "max_samples": 8000
+      },
+      {
+        "path": "nvidia/OpenCodeReasoning",
+        "max_samples": 8000
+      },
+      {
+        "path": "bigcode/self-oss-instruct-sc2-exec-filter-50k",
+        "max_samples": 8000
+      },
+      {
+        "path": "m-a-p/CodeFeedback-Filtered-Instruction",
+        "max_samples": 8000
+      },
+      {
+        "path": "nickrosh/Evol-Instruct-Code-80k",
+        "max_samples": 8000
+      },
+      {
+        "path": "magpie-align/Magpie-Reasoning-150K",
+        "max_samples": 8000
+      },
+      {
+        "path": "Hoglet-33/webdev-coding-dataset",
+        "max_samples": 8000
+      },
+      {
+        "path": "smirki/UI_REASONING_v1.01",
+        "max_samples": 8000
+      },
+      {
+        "path": "sahil2801/CodeAlpaca-20k",
+        "max_samples": 8000
+      },
+      {
+        "path": "iamtarun/python_code_instructions_18k_alpaca",
+        "max_samples": 8000
+      },
+      {
+        "path": "TokenBender/code_instructions_122k_alpaca_style",
+        "max_samples": 10000
+      },
+      {
+        "path": "flytech/python-codes-25k",
+        "max_samples": 8000
+      },
+      {
+        "path": "ajibawa-2023/Code-74k-ShareGPT",
+        "max_samples": 8000
+      },
+      {
+        "path": "glaiveai/glaive-code-assistant-v3",
+        "max_samples": 10000
+      },
+      {
+        "path": "theblackcat102/evol-codealpaca-v1",
+        "max_samples": 8000
+      },
+      {
+        "path": "nampdn-ai/tiny-codes",
+        "max_samples": 10000
+      },
+      {
+        "path": "HuggingFaceH4/CodeAlpaca_20K",
+        "max_samples": 8000
+      },
+      {
+        "path": "Vezora/Tested-22k-Python-Alpaca",
+        "max_samples": 8000
+      },
+      {
+        "path": "greengerong/leetcode",
+        "max_samples": 8000
+      },
+      {
+        "path": "axay/javascript-dataset",
+        "max_samples": 8000
+      },
+      {
+        "path": "Nan-Do/instructional_code-search-net-javacript",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/coding",
+      "training/shared"
+    ]
+  },
+  "reasoning": {
+    "huggingface": [
+      {
+        "path": "nvidia/Daring-Anteater",
+        "max_samples": 8000
+      },
+      {
+        "path": "HuggingFaceH4/ultrachat_200k",
+        "max_samples": 8000
+      },
+      {
+        "path": "angrygiraffe/claude-opus-4.6-4.7-reasoning-8.7k",
+        "max_samples": 8000
+      },
+      {
+        "path": "allenai/Dolci-Think-SFT-7B",
+        "max_samples": 8000
+      },
+      {
+        "path": "prithivMLmods/Deepthink-Reasoning",
+        "max_samples": 8000
+      },
+      {
+        "path": "teknium/OpenHermes-2.5",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/reasoning",
+      "training/shared"
+    ]
+  },
+  "general": {
+    "huggingface": [
+      {
+        "path": "MBZUAI-Paris/Egyptian-SFT-Mixture",
+        "max_samples": 8000
+      },
+      {
+        "path": "HuggingFaceH4/ultrachat_200k",
+        "max_samples": 8000
+      },
+      {
+        "path": "OpenAssistant/oasst1",
+        "max_samples": 8000
+      },
+      {
+        "path": "databricks/databricks-dolly-15k",
+        "max_samples": 8000
+      },
+      {
+        "path": "blended_skill_talk",
+        "max_samples": 8000
+      },
+      {
+        "path": "daily_dialog",
+        "max_samples": 8000
+      },
+      {
+        "path": "teknium/OpenHermes-2.5",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/general",
+      "training/shared"
+    ]
+  },
+  "control": {
+    "huggingface": [
+      {
+        "path": "NousResearch/hermes-function-calling-v1",
+        "max_samples": 8000
+      },
+      {
+        "path": "Jofthomas/hermes-function-calling-thinking-V1",
+        "max_samples": 8000
+      }
+    ],
+    "local_dirs": [
+      "training/control",
+      "training/shared"
+    ]
+  },
+  "vision": {
+    "huggingface": [],
+    "local_dirs": [
+      "training/general",
+      "training/shared"
+    ]
+  }
+}

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris AI Dashboard</title>
+    <meta name="description" content="Iris AI: Your intelligent fine-tuned assistant, trained on your data.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=21">
+    <link rel="stylesheet" href="{{ url_for('static', filename='voice_style.css') }}?v=21">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <button class="icon-btn" id="toggleBtn" aria-label="Toggle sidebar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="top-bar-right">
+            <button class="icon-btn" title="Incognito Chat" id="tempChatBtn" aria-label="Temporary chat">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <line x1="9" y1="10" x2="15" y2="10"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <button class="icon-btn" id="settingsBtn" aria-label="Settings" style="position: fixed; bottom: 20px; left: 16px; z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    </button>
+
+    <button class="icon-btn" title="Quick New Chat" id="quickNewChatBtnGlobal" aria-label="Quick new chat" style="position: fixed; top: 60px; left: 17px; z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <svg class="main-icon pen-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="header-row" style="justify-content: space-between; padding: 4px 4px 4px 8px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 10px; user-select: none; margin-left: 10px;">
+                <img src="{{ url_for('static', filename='logo-dark.png') }}" alt="" class="iris-logo-text dark-only" style="width: 28px; height: 28px;">
+                <img src="{{ url_for('static', filename='logo-light.png') }}" alt="" class="iris-logo-text light-only" style="width: 28px; height: 28px;">
+                <span style="font-size: 18px; font-weight: 400; font-family: 'Outfit', sans-serif; color: var(--text-primary); letter-spacing: -0.3px;">Iris</span>
+            </div>
+            <button class="icon-btn" id="closeSidebarBtn" aria-label="Close sidebar" onclick="document.getElementById('toggleBtn').click()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="sidebar-body">
+            <div class="sidebar-content">
+            <div class="nav-item" id="newChatBtn" aria-label="New chat">
+                <svg class="main-icon pen-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <span class="nav-text">New chat</span>
+            </div>
+            
+            <div class="nav-item" id="searchToggleBtn" aria-label="Search chats">
+                <svg class="main-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="nav-text">Search chats</span>
+            </div>
+
+            <div class="nav-item" id="voiceChatBtn" aria-label="Voice chat">
+                <svg class="main-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" x2="12" y1="19" y2="22"></line>
+                </svg>
+                <span class="nav-text">Voice chat</span>
+            </div>
+            
+
+
+        </div>
+
+        <div class="search-bar-container" id="searchBarContainer">
+            <div class="search-bar-inner">
+                <svg class="search-bar-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" class="search-bar-input" placeholder="Search chats..."
+                    autocomplete="off" spellcheck="false" dir="auto">
+                <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="recent-section nav-text">
+            <p class="section-label" id="recentLabel">Recent Chats</p>
+            <div class="chat-history" id="chatHistory"></div>
+            <p class="search-empty" id="searchEmpty">No chats match your search.</p>
+        </div>
+
+            </div>
+        </div>
+    </aside>
+
+    <div id="chatContextMenu" class="chat-context-menu" style="display: none;">
+        <div class="context-menu-item" id="cmShareBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            Share conversation
+        </div>
+        <div class="context-menu-item" id="cmPinBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 11.64V6a3 3 0 0 0-6 0v5.64a2 2 0 0 1-1.11 1.91l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+            Pin
+        </div>
+        <div class="context-menu-item" id="cmRenameBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            Rename
+        </div>
+        <div class="context-menu-item delete-item" id="cmDeleteBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            Delete
+        </div>
+    </div>
+
+    <main class="main-content" id="mainContent">
+
+
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <div class="center-panel" id="centerPanel">
+            <div class="welcome-section" id="welcomeSection">
+                <h1 class="hi-text" id="greetingText">Hi</h1>
+                <p class="sub-text">What's on your mind today?</p>
+            </div>
+
+            <div class="input-area" id="inputArea">
+                <div id="inputDragOverlay" class="input-drag-overlay">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                        </path>
+                    </svg>
+                    <span>Drop files here</span>
+                </div>
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
+                
+                <div id="routeAutocomplete" class="route-autocomplete hidden">
+                    <ul id="routeAutocompleteList" class="route-autocomplete-list">
+                        
+                    </ul>
+                </div>
+
+                <div class="input-wrapper relative">
+                    <label for="imageInput" class="action-btn" title="Add file or image">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                            </path>
+                        </svg>
+                    </label>
+                    <input type="file" id="imageInput" style="display:none;" multiple>
+
+                    <textarea id="chatInput" placeholder="Ask anything" autocomplete="off" rows="1"
+                        dir="auto"></textarea>
+
+                    <div id="customModelDropdownBtn" class="custom-model-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        <span id="customModelSelectedText" style="font-size: 13px; font-weight: 500;">Balanced</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        
+                        <select id="cs_performance_profile" style="display: none;">
+                            <option value="0">Low</option>
+                            <option value="1" selected>Balanced</option>
+                            <option value="2">High</option>
+                        </select>
+
+                        <div id="customModelMenu" class="custom-model-menu" style="display: none; top: auto; bottom: calc(100% + 12px); right: 0; left: auto; width: 220px; z-index: 5000; padding: 8px;">
+                            <div class="custom-model-option" data-value="0">
+                                <div class="cm-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                                <div class="cm-text">
+                                    <div class="cm-title" style="font-size: 13px;">Low</div>
+                                    <div class="cm-subtext" style="font-size: 11px;">Fastest answers</div>
+                                </div>
+                            </div>
+                            <div class="custom-model-option selected" data-value="1">
+                                <div class="cm-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                                <div class="cm-text">
+                                    <div class="cm-title" style="font-size: 13px;">Balanced</div>
+                                    <div class="cm-subtext" style="font-size: 11px;">All-around help</div>
+                                </div>
+                            </div>
+                            <div class="custom-model-option" data-value="2">
+                                <div class="cm-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                                <div class="cm-text">
+                                    <div class="cm-title" style="font-size: 13px;">High</div>
+                                    <div class="cm-subtext" style="font-size: 11px;">Advanced maths and code</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="action-btn" id="dictationBtn" aria-label="Dictate" title="Dictate">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" x2="12" y1="19" y2="22"></line>
+                        </svg>
+                    </button>
+
+                    {% if pro_mode %}
+                    <select id="proModeSelector" class="pro-mode-select">
+                        <option value="smart">Smart</option>
+                        <option value="fast">Fast</option>
+                    </select>
+                    {% endif %}
+
+                    <button class="send-btn" id="sendBtn" aria-label="Send message">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <p class="footere" id="footerText">Iris AI can make mistakes. Check important info.</p>
+            </div>
+        </div>
+    </main>
+
+    
+    <div class="settings-overlay" id="settingsOverlay"></div>
+
+    <aside class="settings-panel" id="settingsPanel" aria-label="Settings">
+        <div class="settings-header">
+            <h2 class="settings-title">Settings</h2>
+            <button class="icon-btn" id="closeSettingsBtn" aria-label="Close settings">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="settings-tabs">
+            <button class="stab-btn active" id="stab-chat" data-tab="chat">Global Settings</button>
+            <button class="stab-btn" id="stab-models" data-tab="models">Models</button>
+        </div>
+
+        
+        <div class="settings-tab-content active" id="stab-content-chat">
+            <p class="settings-section-label">Appearance</p>
+
+            <div class="settings-field">
+                <label for="themeToggle">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Theme Mode</span>
+                        <div class="theme-switch-wrapper">
+                            <label class="theme-switch" for="themeToggle">
+                                <input type="checkbox" id="themeToggle" />
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <span class="field-hint">Switch between AMOLED dark mode and Light mode.</span>
+                </label>
+            </div>
+
+
+
+            <p class="settings-section-label" style="margin-top: 20px;">Generation</p>
+
+            <div class="settings-field">
+                <label for="cs_max_new_tokens">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Max New Tokens</span>
+                        <span id="val_max_new_tokens" style="color:var(--iris-purple); font-weight:bold;">40</span>
+                    </div>
+                    <span class="field-hint">Number of tokens the model generates per reply.</span>
+                </label>
+                <input type="range" id="cs_max_new_tokens" value="40" min="1" max="4096"
+                    oninput="document.getElementById('val_max_new_tokens').innerText = this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="cs_temperature">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Temperature</span>
+                        <span id="val_temperature" style="color:var(--iris-purple); font-weight:bold;">0.6</span>
+                    </div>
+                    <span class="field-hint">Higher = more creative. Lower = more predictable.</span>
+                </label>
+                <input type="range" id="cs_temperature" value="0.6" step="0.05" min="0.01" max="2"
+                    oninput="document.getElementById('val_temperature').innerText = this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="cs_top_p">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Top P</span>
+                        <span id="val_top_p" style="color:var(--iris-purple); font-weight:bold;">0.9</span>
+                    </div>
+                    <span class="field-hint">Nucleus sampling threshold.</span>
+                </label>
+                <input type="range" id="cs_top_p" value="0.9" step="0.05" min="0" max="1"
+                    oninput="document.getElementById('val_top_p').innerText = this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="cs_top_k">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Top K</span>
+                        <span id="val_top_k" style="color:var(--iris-purple); font-weight:bold;">40</span>
+                    </div>
+                    <span class="field-hint">Limits vocabulary to the top K likely tokens.</span>
+                </label>
+                <input type="range" id="cs_top_k" value="40" min="1" max="200"
+                    oninput="document.getElementById('val_top_k').innerText = this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="cs_repetition_penalty">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Repetition Penalty</span>
+                        <span id="val_repetition_penalty" style="color:var(--iris-purple); font-weight:bold;">1.3</span>
+                    </div>
+                    <span class="field-hint">Penalizes repeating words. 1.05–1.3 works well.</span>
+                </label>
+                <input type="range" id="cs_repetition_penalty" value="1.3" step="0.05" min="1" max="2"
+                    oninput="document.getElementById('val_repetition_penalty').innerText = this.value">
+            </div>
+
+            <p class="settings-section-label" style="margin-top:20px">Memory &amp; Context</p>
+
+            <div class="settings-field">
+                <label for="cs_n_ctx_allocation">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Context Length Allocation</span>
+                        <span id="val_n_ctx_allocation" style="color:var(--iris-purple); font-weight:bold;">Auto</span>
+                    </div>
+                    <span class="field-hint">Maximum context size. Auto dynamically scales to your RAM.</span>
+                </label>
+                <input type="range" id="cs_n_ctx_allocation" value="0" min="0" max="4" step="1"
+                    oninput="document.getElementById('val_n_ctx_allocation').innerText = ['Auto','4096','8192','16384','32768'][this.value]">
+            </div>
+
+            <div class="settings-field">
+                <label for="cs_compacting_profile">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Compacting Profile</span>
+                        <span id="val_compacting_profile"
+                            style="color:var(--iris-purple); font-weight:bold;">Medium</span>
+                    </div>
+                    <span class="field-hint">How aggressively to forget older messages when context fills up.</span>
+                </label>
+                <input type="range" id="cs_compacting_profile" value="1" min="0" max="2" step="1"
+                    oninput="document.getElementById('val_compacting_profile').innerText = ['Low','Medium','Aggressive'][this.value]">
+            </div>
+            <div class="settings-field"
+                style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; padding:12px 0; gap: 16px;">
+                <label for="cs_keep_triage_loaded"
+                    style="margin:0; cursor:pointer; flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                    <span id="keep_triage" style="color: var(--text-primary);">Keep Triage Loaded</span>
+                    <span class="field-hint">When enabled, keeps the routing model in memory for faster responses, at the cost of using memory constantly.</span>
+                </label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label class="toggle-label" style="margin:0;">
+                        <input type="checkbox" id="cs_keep_triage_loaded">
+                        <div class="toggle-track"></div>
+                    </label>
+                </div>
+            </div>
+
+            <p class="settings-section-label" style="margin-top:20px">Code Quality</p>
+            <div class="settings-field"
+                style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; padding:12px 0; gap: 16px;">
+                <label for="cs_code_review"
+                    style="margin:0; cursor:pointer; flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                    <span id="review" style="color: var(--text-primary);">Code Review</span>
+                    <span class="field-hint">When enabled, automatically reviews written code and suggests
+                        improvements.</span>
+                </label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label class="toggle-label" style="margin:0;">
+                        <input type="checkbox" id="cs_code_review"
+                            onchange="document.getElementById('val_code_review').innerText = this.checked ? 'On' : 'Off'">
+                        <div class="toggle-track"></div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="settings-save-btn" id="saveChatSettingsBtn">Save Global Settings</button>
+        </div>
+
+        
+        <div class="settings-tab-content" id="stab-content-models">
+            <p class="settings-section-label">Select Model Role</p>
+            <div class="settings-field">
+                <select id="modelRoleSelect">
+                    <option value="code">Code</option>
+                    <option value="reasoning">Reasoning</option>
+                    <option value="triage">Triage</option>
+                    <option value="router">Router</option>
+                    <option value="control">Control</option>
+                    <option value="math">Math</option>
+                    <option value="reviewer">Reviewer</option>
+                    <option value="general">General</option>
+                    <option value="vision">Vision</option>
+                </select>
+            </div>
+
+            <p class="settings-section-label" style="margin-top:20px">Overrides</p>
+            <span class="field-hint" style="display:block; margin-bottom: 15px;">These override the global generation
+                settings. Leave as "Global" to inherit from the main config.</span>
+
+            <div class="settings-field">
+                <label for="ms_temperature">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Temperature</span>
+                        <span id="val_ms_temperature" style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_temperature" value="-0.01" step="0.01" min="-0.01" max="2"
+                    oninput="document.getElementById('val_ms_temperature').innerText = this.value < 0 ? 'Global' : this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="ms_top_p">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Top P</span>
+                        <span id="val_ms_top_p" style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_top_p" value="-0.05" step="0.05" min="-0.05" max="1"
+                    oninput="document.getElementById('val_ms_top_p').innerText = this.value < 0 ? 'Global' : this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="ms_top_k">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Top K</span>
+                        <span id="val_ms_top_k" style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_top_k" value="0" min="0" max="200"
+                    oninput="document.getElementById('val_ms_top_k').innerText = this.value == 0 ? 'Global' : this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="ms_repetition_penalty">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Repetition Penalty</span>
+                        <span id="val_ms_repetition_penalty"
+                            style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_repetition_penalty" value="0.95" step="0.05" min="0.95" max="2"
+                    oninput="document.getElementById('val_ms_repetition_penalty').innerText = this.value < 1.0 ? 'Global' : this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="ms_frequency_penalty">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Frequency Penalty</span>
+                        <span id="val_ms_frequency_penalty"
+                            style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_frequency_penalty" value="-0.05" step="0.05" min="-0.05" max="2"
+                    oninput="document.getElementById('val_ms_frequency_penalty').innerText = this.value < 0 ? 'Global' : this.value">
+            </div>
+
+            <div class="settings-field">
+                <label for="ms_presence_penalty">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                        <span>Presence Penalty</span>
+                        <span id="val_ms_presence_penalty"
+                            style="color:var(--iris-purple); font-weight:bold;">Global</span>
+                    </div>
+                </label>
+                <input type="range" id="ms_presence_penalty" value="-0.05" step="0.05" min="-0.05" max="2"
+                    oninput="document.getElementById('val_ms_presence_penalty').innerText = this.value < 0 ? 'Global' : this.value">
+            </div>
+
+            <button class="settings-save-btn" id="saveModelSettingsBtn" style="margin-top: 20px;">Save Model
+                Settings</button>
+        </div>
+
+    </aside>
+
+    
+    <div id="setupModal" class="setup-modal" style="display:none;">
+        <div class="setup-modal-content">
+            <h2 class="setup-title">Welcome to Iris AI</h2>
+            <p class="setup-subtitle">No GGUF models found. Choose how to proceed:</p>
+
+            <div class="setup-options">
+                <button class="setup-option" id="setupDownload">
+                    <div class="setup-option-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </div>
+                    <div class="setup-option-text">
+                        <span class="setup-option-title">Download Models</span>
+                        <span class="setup-option-desc">Download recommended GGUF models (~2GB)</span>
+                    </div>
+                </button>
+
+                <button class="setup-option" id="setupFolder">
+                    <div class="setup-option-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="setup-option-text">
+                        <span class="setup-option-title">Load from Folder</span>
+                        <span class="setup-option-desc">Select a folder containing GGUF files</span>
+                    </div>
+                </button>
+
+                <button class="setup-option" id="setupRemote">
+                    <div class="setup-option-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <div class="setup-option-text">
+                        <span class="setup-option-title">Remote Access</span>
+                        <span class="setup-option-desc">Connect to another device running Iris AI</span>
+                    </div>
+                </button>
+
+                <button class="setup-option" id="setupContinue">
+                    <div class="setup-option-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                    <div class="setup-option-text">
+                        <span class="setup-option-title">Continue Anyway</span>
+                        <span class="setup-option-desc">Use Iris AI without local models (limited features)</span>
+                    </div>
+                </button>
+            </div>
+
+            <div id="setupDownloadProgress" class="setup-progress" style="display:none;">
+                <div class="setup-progress-text">Downloading models...</div>
+                <div class="setup-progress-bar">
+                    <div class="setup-progress-fill" id="setupProgressFill"></div>
+                </div>
+                <div class="setup-progress-status" id="setupProgressStatus">0%</div>
+            </div>
+
+            <div id="setupRemoteInput" class="setup-remote-input" style="display:none;">
+                <input type="text" id="remoteUrlInput" class="setup-remote-url" placeholder="http://192.168.1.x:5000">
+                <button class="setup-remote-connect" id="remoteConnectBtn">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="voiceModal" class="voice-modal">
+        <div class="voice-modal-content">
+            <h2 id="voiceStatusText">Connecting...</h2>
+
+            <div class="voice-visualizer-container">
+                <div id="voiceOrb" class="voice-orb"></div>
+            </div>
+
+            <div id="voiceTranscription" class="voice-transcription"></div>
+
+            <div class="voice-toolbar">
+                <button id="voiceMuteBtn" class="voice-tool-btn" aria-label="Mute microphone">
+                    <svg id="icon-mic-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" x2="12" y1="19" y2="22"></line>
+                    </svg>
+                    <svg id="icon-mic-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                        <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+                        <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+                        <line x1="12" y1="19" x2="12" y2="22"></line>
+                    </svg>
+                </button>
+                <button id="closeVoiceBtn" class="voice-tool-btn hangup-btn" aria-label="End call">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-7-7 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91">
+                        </path>
+                        <line x1="23" y1="1" x2="1" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="/static/vendor/marked.min.js"></script>
+    <script src="/static/vendor/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/marked-katex-extension/lib/index.umd.js"></script>
+    <script src="/static/script.js?v=16"></script>
+    <script src="/static/scriptchat.js?v=21"></script>
+    <script src="/static/voice.js?v=16"></script>
+    <script src="{{ url_for('static', filename='settings.js') }}?v=16"></script>
+    <script src="{{ url_for('static', filename='setup.js') }}?v=16"></script>
+</body>
+
+</html>

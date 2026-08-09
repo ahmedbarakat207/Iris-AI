@@ -141,23 +141,7 @@ def parse_args():
 
     return parser.parse_args()
 
-LOADER_FUNCTIONS = {
-    "blended_skill_talk": load_blended_skill_talk,
-    "daily_dialog": load_daily_dialog,
-    "EleutherAI/hendrycks_math": load_math_qa,
-    "m-a-p/CodeFeedback-Filtered-Instruction": load_code_feedback,
-    "angrygiraffe/claude-opus-4.6-4.7-reasoning-8.7k": load_claude_reasoning_dataset,
-    "allenai/Dolci-Think-SFT-7B": load_dolci_think_dataset,
-    "prithivMLmods/Deepthink-Reasoning": load_deepthink_dataset,
-    "teknium/OpenHermes-2.5": load_openhermes_reasoning,
-    "MBZUAI-Paris/Egyptian-SFT-Mixture": load_mbzuai_egyptian_mixture,
-    "islamic-datasets/Istilah_Maliki_Dataset": load_hf_maliki_dataset,
-    "OpenAssistant/oasst1": load_oasst1_dataset,
-    "ise-uiuc/Magicoder-OSS-Instruct-75K": load_magicoder_dataset,
-    "nvidia/OpenCodeReasoning": load_open_code_reasoning,
-    "bigcode/self-oss-instruct-sc2-exec-filter-50k": load_self_oss_instruct,
-    "HuggingFaceH4/ultrachat_200k": load_ultrachat_200k,
-}
+
 
 def load_generic_hf_dataset(path: str, limit: int = None) -> List[Tuple[str, str]]:
     try:

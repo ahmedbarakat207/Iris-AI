@@ -109,7 +109,7 @@ def _shutdown_cleanup():
     
     if not PREVIEW_MODE:
         try:
-            from src.iris.iris.engine import _force_unload_all_models
+            from src.iris.engine import _force_unload_all_models
             logger.info("[Shutdown] Freeing all loaded models from memory...")
             _force_unload_all_models()
             logger.info("[Shutdown] All models freed.")
@@ -127,7 +127,7 @@ def get_retriever():
             return retriever
         logger.info("[INFO] Loading RAG Knowledge Base...")
         try:
-            from src.iris.iris.rag import BookRetriever
+            from src.iris.rag import BookRetriever
             retriever = BookRetriever(raw_data_dir="raw_data")
             retriever.load_and_index()
         except Exception as e:
@@ -324,7 +324,7 @@ def chat():
                     full_stream_text += "\n</think>\n\n"
                     
                 # Post-pipeline HCA compaction
-                from src.iris.iris.engine import ModelRole
+                from src.iris.engine import ModelRole
                 from src.hca.context_compactor import auto_compact_for_role
                 
                 # Determine role enum
@@ -389,7 +389,7 @@ def analyze_image_route():
             reply = f"[Preview Mode] Would analyse '{filename}' with prompt: {prompt}"
         else:
             with global_generation_lock:
-                from src.iris.iris.vision import analyze_image
+                from src.iris.vision import analyze_image
                 reply = analyze_image(save_path, prompt)
     except Exception as e:
         reply = f"Image analysis failed: {e}"
@@ -563,7 +563,7 @@ def generate_title():
 
     with global_generation_lock:
         try:
-            from src.iris.iris.engine import load_model, ModelRole, _keep_loaded, unload_model
+            from src.iris.engine import load_model, ModelRole, _keep_loaded, unload_model
             import re
             
             llm = load_model(ModelRole.TRIAGE)
@@ -785,7 +785,7 @@ def save_settings():
 
 @app.route("/model_status", methods=["GET"])
 def model_status():
-    from src.iris.iris.engine import get_active_role, load_generation_config, ModelRole, DEFAULT_MODEL_FILES
+    from src.iris.engine import get_active_role, load_generation_config, ModelRole, DEFAULT_MODEL_FILES
 
     active_role = None
     active_file = None
@@ -817,7 +817,7 @@ def model_status():
 
 def warmup_models():
     try:
-        from src.iris.iris.engine import load_generation_config, DEFAULT_MODEL_FILES, prefetch_model_file
+        from src.iris.engine import load_generation_config, DEFAULT_MODEL_FILES, prefetch_model_file
         cfg = load_generation_config()
         models_dict = cfg.get("models", {})
         
@@ -840,7 +840,7 @@ def unload_models_endpoint():
     if PREVIEW_MODE:
         return jsonify({"status": "preview_mode", "message": "No models loaded in preview mode."})
     try:
-        from src.iris.iris.engine import _force_unload_all_models
+        from src.iris.engine import _force_unload_all_models
         _force_unload_all_models()
         logger.info("[API] All models unloaded from memory on request.")
         return jsonify({"status": "success", "message": "All models freed from memory."})
@@ -895,8 +895,8 @@ if __name__ == "__main__":
             stdscr.nodelay(1)
             
             try:
-                from src.iris.iris.engine import _model_pool, ROLE_CTX, ModelRole
-                from src.iris.iris.vision import _vision_cache
+                from src.iris.engine import _model_pool, ROLE_CTX, ModelRole
+                from src.iris.vision import _vision_cache
             except ImportError:
                 _model_pool = {}
                 ROLE_CTX = {}

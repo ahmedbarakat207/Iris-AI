@@ -1,4 +1,4 @@
-from src.iris.iris import load_model, ModelRole
+from src.iris import load_model, ModelRole
 import time
 
 def test():

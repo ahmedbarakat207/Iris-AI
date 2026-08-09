@@ -1,4 +1,4 @@
-from src.iris.iris.engine import _load_skill_prompt, ModelRole
+from src.iris.engine import _load_skill_prompt, ModelRole
 
 
 def get_reasoning_prompt(identity: str) -> str:
@@ -9,7 +9,7 @@ def get_reasoning_prompt(identity: str) -> str:
 import re
 import logging
 from typing import Generator, Dict, Optional, Any
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     load_model,
     unload_model,
@@ -19,7 +19,7 @@ from src.iris.iris.engine import (
     _quality_guard,
 )
 
-from src.iris.iris.engine import detect_user_language, _language_directive, translate_text
+from src.iris.engine import detect_user_language, _language_directive, translate_text
 
 logger = logging.getLogger("iris")
 

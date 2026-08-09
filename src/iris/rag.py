@@ -263,4 +263,4 @@ class BookRetriever:
         return "\n\n---\n\n".join(retrieved_texts) if retrieved_texts else ""
 
 
-from src.iris.iris.datasets import *
+from src.iris.datasets import *

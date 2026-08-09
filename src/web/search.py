@@ -254,7 +254,7 @@ class WebSearch:
             return []
 
         try:
-            from src.iris.iris.engine import detect_user_language, translate_text
+            from src.iris.engine import detect_user_language, translate_text
 
             query_lang = detect_user_language(query)
             if query_lang and query_lang != "English":

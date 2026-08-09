@@ -1,6 +1,6 @@
 import re
 from typing import Generator, Dict, Any
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     load_model,
     unload_model,
@@ -8,8 +8,8 @@ from src.iris.iris.engine import (
     _stream_tokens,
     load_generation_config,
 )
-from src.iris.iris.engine import detect_user_language, _language_directive
-from src.iris.iris.engine import (
+from src.iris.engine import detect_user_language, _language_directive
+from src.iris.engine import (
     _quality_guard,
     translate_text,
     _load_skill_prompt,

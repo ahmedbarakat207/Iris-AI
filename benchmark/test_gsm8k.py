@@ -17,7 +17,7 @@ from benchmark.utils import run_inference, run_inference_sc, append_to_csv
 from benchmark.compare import match, match_with_verifier, fix_common_format_issues
 from benchmark.auto_correct import auto_correct_math_answer
 from benchmark.verify_math import verify_and_refine
-from src.iris.iris import ModelRole
+from src.iris import ModelRole
 
 FIELDNAMES = ["Benchmark", "Role", "Prompt", "Expected", "Model_Answer", "Passed", "Time_Sec"]
 
@@ -162,7 +162,7 @@ def run_gsm8k_benchmark(csv_path: str, num_samples: int = 100):
 
                                                                      
     try:
-        from src.iris.iris import unload_model
+        from src.iris import unload_model
         unload_model()
     except Exception:
         pass

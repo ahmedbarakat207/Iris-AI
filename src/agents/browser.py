@@ -480,7 +480,7 @@ def browser_autopilot(
     existing_driver=None,
 ) -> str:
 
-    from .iris import generate_internal_code, ModelRole
+    from src.iris import generate_internal_code, ModelRole
 
     resume = {}
     if resume_path and os.path.exists(resume_path):
@@ -724,7 +724,7 @@ def browser_autopilot(
 def browser_task(url: str, task: str, existing_driver=None) -> str:
 
     driver = existing_driver if existing_driver else _make_driver(headless=False)
-    from .iris import generate_internal_code, ModelRole
+    from src.iris import generate_internal_code, ModelRole
 
     raw_code = ""
     try:
@@ -778,7 +778,7 @@ def browser_login(url: str, username: str, password: str) -> str:
         time.sleep(2.5)
         helpers = _make_helpers(driver)
 
-        from .iris import generate_internal_code, ModelRole
+        from src.iris import generate_internal_code, ModelRole
 
         prompt = (
             f"Log into this page with username '{username}' and password '{password}'.\n"

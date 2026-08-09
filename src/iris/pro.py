@@ -13,7 +13,7 @@ from typing import Any, AsyncGenerator
 
 import openai
 from openai import AsyncOpenAI
-from src.iris.iris.coding import get_code_prompt, get_reviewer_prompt
+from src.iris.coding import get_code_prompt, get_reviewer_prompt
 
 warnings.filterwarnings(
     "ignore", category=RuntimeWarning, message="coroutine method 'aclose'"
@@ -818,7 +818,7 @@ async def ask_stream(
         r"^\[IMAGE_UPLOADED:\s*(.+?)\]\s*(.*)$", user_query, flags=re.DOTALL
     )
     if img_match:
-        from src.iris.iris import analyze_image
+        from src.iris import analyze_image
         import os
 
         image_path = img_match.group(1).strip()

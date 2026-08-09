@@ -136,7 +136,7 @@ def chat_completions():
     is_pro = "pro" in model.lower()
 
     def get_generator():
-        from src.iris.iris.engine import _model_pool, _model_paths, ModelRole, load_model
+        from src.iris.engine import _model_pool, _model_paths, ModelRole, load_model
         from llama_cpp import Llama
         import gc
 

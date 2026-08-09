@@ -8,7 +8,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import benchmark.utils
-from src.iris.iris.pro import ask_stream
+from src.iris.pro import ask_stream
 
 _latest_metrics = {"ttft": 0.0, "speed": 0.0}
 

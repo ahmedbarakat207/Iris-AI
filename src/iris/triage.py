@@ -35,7 +35,7 @@ import logging
 import re
 from typing import Dict, List, Optional, Tuple
 
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     TaskType,
     load_model,
@@ -253,7 +253,7 @@ def classify_task(
     finally:
 
         try:
-            import src.iris.iris.engine as _engine
+            import src.iris.engine as _engine
 
             cfg = load_generation_config()
             if not _engine._keep_loaded and not cfg.get("keep_triage_loaded"):

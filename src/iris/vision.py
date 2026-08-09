@@ -6,7 +6,7 @@ import logging
 import re
 from llama_cpp import Llama
 import llama_cpp
-from src.iris.iris.engine import load_generation_config, ModelRole, _HERE, ROLE_CTX
+from src.iris.engine import load_generation_config, ModelRole, _HERE, ROLE_CTX
 
 logger = logging.getLogger("iris")
 

@@ -4,7 +4,7 @@ import logging
 from typing import Generator, Dict
 import threading
 import os
-from src.iris.iris.engine import (
+from src.iris.engine import (
     TaskType,
     ModelRole,
     _keep_loaded,
@@ -14,14 +14,14 @@ from src.iris.iris.engine import (
     _get_model_filename,
     _quality_guard,
 )
-import src.iris.iris.engine
-from src.iris.iris.vision import analyze_image
-from src.iris.iris.triage import classify_task
-from src.iris.iris.control import run_stream as control_run_stream
-from src.iris.iris.reasoning import run_stream as reasoning_run_stream
-from src.iris.iris.general import run_stream as general_run_stream
-from src.iris.iris.math import run_stream as math_run_stream
-from src.iris.iris.coding import run_stream as coding_run_stream
+import src.iris.engine
+from src.iris.vision import analyze_image
+from src.iris.triage import classify_task
+from src.iris.control import run_stream as control_run_stream
+from src.iris.reasoning import run_stream as reasoning_run_stream
+from src.iris.general import run_stream as general_run_stream
+from src.iris.math import run_stream as math_run_stream
+from src.iris.coding import run_stream as coding_run_stream
 
 logger = logging.getLogger("iris")
 
@@ -66,7 +66,7 @@ def ask_stream(
 
         def _bg_prefetch():
             try:
-                from src.iris.iris.engine import (
+                from src.iris.engine import (
                     prefetch_model_file,
                     _get_model_filename,
                     ModelRole,
@@ -94,7 +94,7 @@ def ask_stream(
         if not prompt:
             prompt = "Describe this image in detail."
         yield {"type": "status", "content": "Analyzing image with Vision model..."}
-        from src.iris.iris.vision import analyze_image
+        from src.iris.vision import analyze_image
 
         res = analyze_image(image_path, prompt, unload_after=not keep_loaded)
 
@@ -110,7 +110,7 @@ def ask_stream(
         return
     direct_answer = ""
 
-    src.iris.iris.engine._keep_loaded = keep_loaded
+    src.iris.engine._keep_loaded = keep_loaded
 
     user_lang = detect_user_language(user_query)
     is_translated = False
@@ -169,11 +169,11 @@ def ask_stream(
         }
         task_type = role_map.get(force_role, None)
         if task_type is None:
-            from src.iris.iris.triage import classify_task
+            from src.iris.triage import classify_task
 
             task_type, direct_answer = classify_task(user_query, history)
     else:
-        from src.iris.iris.triage import classify_task
+        from src.iris.triage import classify_task
 
         task_type, direct_answer = classify_task(user_query, history)
 
@@ -193,12 +193,12 @@ def ask_stream(
 
     gen = None
     if task_type == TaskType.CONTROL:
-        from src.iris.iris.control import run_stream
+        from src.iris.control import run_stream
 
         gen = run_stream(user_query, history, retriever, settings)
 
     elif task_type == TaskType.SEARCH:
-        from src.iris.iris.reasoning import run_stream
+        from src.iris.reasoning import run_stream
 
         gen = run_stream(
             user_query,
@@ -220,23 +220,23 @@ def ask_stream(
     else:
         yield {"type": "status", "content": f"Task: {task_type.value.upper()}"}
         if task_type == TaskType.GENERAL:
-            from src.iris.iris.general import run_stream
+            from src.iris.general import run_stream
 
             gen = run_stream(user_query, history, retriever, settings)
         elif task_type == TaskType.REASONING:
-            from src.iris.iris.reasoning import run_stream
+            from src.iris.reasoning import run_stream
 
             gen = run_stream(user_query, history, retriever, settings, do_search=False)
         elif task_type == TaskType.MATH:
-            from src.iris.iris.math import run_stream
+            from src.iris.math import run_stream
 
             gen = run_stream(user_query, history, retriever, settings)
         elif task_type == TaskType.CODING_SIMPLE:
-            from src.iris.iris.coding import run_stream
+            from src.iris.coding import run_stream
 
             gen = run_stream(user_query, history, retriever, settings, is_complex=False)
         elif task_type == TaskType.CODING_COMPLEX:
-            from src.iris.iris.coding import run_stream
+            from src.iris.coding import run_stream
 
             gen = run_stream(user_query, history, retriever, settings, is_complex=True)
 

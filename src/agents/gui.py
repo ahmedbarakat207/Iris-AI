@@ -12,7 +12,7 @@ try:
 except ImportError:
     pyautogui = None
 
-from src.iris.iris import analyze_image
+from src.iris import analyze_image
 
 
 def _type_text_reliably(text: str):

@@ -29,7 +29,7 @@ def _ensure_open_interpreter():
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.core.logger import get_logger
-from src.iris.iris.engine import (
+from src.iris.engine import (
     detect_user_language,
     translate_text,
     _model_pool,
@@ -290,7 +290,7 @@ def _run_oi_task(task: str) -> Generator[Dict[str, str], None, str]:
         logger.info(f"[OI] chat completed: {task[:80]!r}")
 
         try:
-            from src.iris.iris.engine import unload_model
+            from src.iris.engine import unload_model
 
             unload_model(ModelRole.CODE.value)
             logger.info("[OI] Unloaded CODE model to free memory.")
@@ -551,9 +551,9 @@ def web_search(query: str, max_results: int = 5) -> str:
 
 CLIPBOARD_AVAILABLE = True
 try:
-    from src.iris.iris import ask_stream
-    from src.iris.iris.rag import BookRetriever
-    from src.iris.iris.vision import analyze_image
+    from src.iris import ask_stream
+    from src.iris.rag import BookRetriever
+    from src.iris.vision import analyze_image
 
     IRIS_AVAILABLE = True
 except ImportError:
@@ -732,7 +732,7 @@ def ai_agent_handle(user_input: str, retriever=None, history=None, **kwargs):
         ai_agent_handle, "force_role", None
     )
     settings = kwargs.get("settings", {})
-    from src.iris.iris import ask_stream
+    from src.iris import ask_stream
 
     keep_loaded = kwargs.get("keep_loaded", False)
     yield from ask_stream(
@@ -751,7 +751,7 @@ def ai_agent_handle_pro(user_input: str, retriever=None, history=None, **kwargs)
     import queue
     import threading
 
-    import src.iris.iris.pro as iris_pro
+    import src.iris.pro as iris_pro
 
     q = queue.Queue()
     mode = kwargs.get("settings", {}).get("mode", "smart")
@@ -956,7 +956,7 @@ def _join_transcript(transcript: list) -> str:
 
 def _unload_control_model():
     try:
-        from src.iris.iris import unload_model
+        from src.iris import unload_model
 
         unload_model()
     except Exception:
@@ -1462,7 +1462,7 @@ def show_model_details():
         console.print("[red]Iris model is not available or not loaded.[/red]")
         return
 
-    from src.iris.iris import load_generation_config
+    from src.iris import load_generation_config
 
     cfg = load_generation_config()
 
@@ -1592,7 +1592,7 @@ def _read_input_with_scroll(prompt_str, model, tokenizer, retriever, history) ->
 def main():
     import argparse
 
-    from src.iris.iris import ModelRole
+    from src.iris import ModelRole
 
     parser = argparse.ArgumentParser(description="Iris AI PC Agent")
     parser.add_argument(

@@ -101,7 +101,7 @@ def main():
         print(f"  Summary results saved to: {os.path.abspath(summary_csv)}\n")
 
     try:
-        from src.iris.iris import unload_model
+        from src.iris import unload_model
         unload_model()
     except Exception:
         pass

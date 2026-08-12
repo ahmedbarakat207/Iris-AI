@@ -31,7 +31,7 @@ def _load_vision_model():
         vision_file = models_dict.get("vision", "InternVL3_5-4B-Q4_K.gguf")
         clip_file = models_dict.get("clip", "mmproj-InternVL3_5-4B-f16.gguf")
 
-        models_dir = os.path.join(os.path.dirname(_HERE), "models")
+        models_dir = os.path.join(os.path.dirname(os.path.dirname(_HERE)), "models")
         vision_path = os.path.join(models_dir, vision_file)
         clip_path = os.path.join(models_dir, clip_file)
 

@@ -235,7 +235,8 @@ class TaskType(str, Enum):
 
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-CONFIG_PATH = os.path.join(os.path.dirname(_HERE), "config", "iris.conf")
+_ROOT = os.path.dirname(os.path.dirname(_HERE))
+CONFIG_PATH = os.path.join(_ROOT, "config", "iris.conf")
 
 DEFAULT_MODEL_FILES: Dict[str, str] = {
     "triage": "iris_001.gguf",
@@ -519,7 +520,7 @@ def _get_model_filename(role: ModelRole) -> str:
 
 
 def _model_path(filename: str) -> str:
-    return os.path.join(os.path.dirname(_HERE), "models", filename)
+    return os.path.join(_ROOT, "models", filename)
 
 
 def _parse_hf_url(url: str) -> Optional[Tuple[str, str]]:
@@ -588,7 +589,7 @@ def _is_gguf_valid(path: str) -> bool:
 
 
 def download_gguf(filename: str, quiet: bool = False) -> bool:
-    dest_path = os.path.join(os.path.dirname(_HERE), "models", filename)
+    dest_path = os.path.join(_ROOT, "models", filename)
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
     if os.path.exists(dest_path) and _is_gguf_valid(dest_path):
@@ -638,7 +639,7 @@ def download_gguf(filename: str, quiet: bool = False) -> bool:
                 downloaded_path = hf_hub_download(
                     repo_id=repo_id,
                     filename=remote_name,
-                    local_dir=os.path.join(os.path.dirname(_HERE), "models"),
+                    local_dir=os.path.join(_ROOT, "models"),
                     local_dir_use_symlinks=False,
                 )
                 if (
@@ -826,7 +827,7 @@ def load_model(role: ModelRole, override_n_ctx: Optional[int] = None) -> "Llama"
             raise FileNotFoundError(
                 f"GGUF model not found or invalid for role '{role.value}'.\n"
                 f"Expected: {path}\n"
-                f"Please place the GGUF file in {os.path.join(os.path.dirname(_HERE), 'models')}/"
+                f"Please place the GGUF file in {os.path.join(_ROOT, 'models')}/"
             )
         cfg = load_generation_config()
 

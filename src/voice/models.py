@@ -146,7 +146,7 @@ def load_voice_llm():
             "[Voice] Loading ultra-fast Conversational LLM (Qwen2.5-1.5B)"
         )
 
-        _root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        _root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         llm_path = os.path.join(_root_dir, "models", "iris_009.gguf")
 
         if not os.path.exists(llm_path):

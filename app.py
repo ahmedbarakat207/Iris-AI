@@ -275,7 +275,7 @@ def chat():
         )
         user_message += reminder
 
-    from src import controller
+    from src.core import controller
     controller.IS_INTERACTIVE = False
     from src.core.controller import ai_agent_handle
 

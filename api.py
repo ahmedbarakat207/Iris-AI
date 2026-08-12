@@ -11,7 +11,7 @@ import time
 import uuid
 from flask import Flask, request, jsonify, Response
 from src.core.controller import ai_agent_handle, ai_agent_handle_pro
-from src import controller
+from src.core import controller
 
 # Ensure interactive mode is off for background server
 controller.IS_INTERACTIVE = False

@@ -2399,6 +2399,11 @@ body.chat-active .footere {
         transition: top 0.3s var(--ease-out-quart), transform 0.3s var(--ease-out-quart) !important;
     }
 
+    body.keyboard-visible .welcome-section {
+        top: 32% !important;
+        transform: translateY(-50%) !important;
+    }
+
     body.chat-active .welcome-section {
         display: none !important;
     }

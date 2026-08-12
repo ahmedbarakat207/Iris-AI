@@ -336,7 +336,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!chatInput) return;
         const currentChat = chats.find(c => c.id === currentChatId);
         const isTemp = currentChat && currentChat.isTemp;
-        chatInput.placeholder = isTemp ? "Ask anything (Incognito)" : "Ask anything";
+        if (window.innerWidth <= 768 && isTemp) {
+            chatInput.placeholder = "Ask (Incognito)";
+        } else {
+            chatInput.placeholder = isTemp ? "Ask anything (Incognito)" : "Ask anything";
+        }
     }
 
     function exitChatMode() {
@@ -367,6 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
         chatMessages.innerHTML = '';
         exitChatMode();
         window.saveAppUIState();
+        if (sidebar && sidebar.classList.contains('expanded')) {
+            sidebar.classList.remove('expanded');
+        }
     }
 
     function loadChat(id) {
@@ -376,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         chatMessages.innerHTML = '';
         chat.messages.forEach(msg => {
-            appendMessageDOM(msg.role, msg.displayText || msg.content, false, msg.imageUrl, msg.attachmentName, msg.sources);
+            appendMessageDOM(msg.role, msg.displayText || msg.content, false, msg.imageUrl, msg.attachmentName, msg.sources, msg.fileCode);
         });
 
         if (chat.messages.length > 0) {
@@ -388,6 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
         updatePlaceholder();
         renderChatList();
         window.saveAppUIState();
+        if (sidebar && sidebar.classList.contains('expanded')) {
+            sidebar.classList.remove('expanded');
+        }
     }
 
     function deleteChat(id) {
@@ -645,33 +655,98 @@ document.addEventListener("DOMContentLoaded", () => {
             return id;
         });
 
-        // 2. Extract Think Block (Internal)
+        // 2. Extract Think Block (Internal) - with nesting support
         let combinedThought = "";
         let isThoughtClosed = true;
         let firstThoughtId = "";
 
-        work = work.replace(/(?:<think>|<\|thought_start\|>|<thought>|<z>|\[thinking\])([\s\S]*?)(?:<\/think>|<\|thought_end\|>|<\/thought>|<\/z>|\[answer\]|\[\/thinking\]|$)/gi, (match, p1) => {
-            const content = p1.trim();
-            if (!content) return '';
+        // 1.5 Fix orphaned end tags (model forgot to start with <think> but outputted </think>)
+        const endTagsOnlyRegex = /(<\/think>|<\|thought_end\|>|<\/thought>|<\/z>|\[answer\]|\[\/thinking\]|<\/thinking>|<\/reasoning>)/i;
+        const startTagsOnlyRegex = /(<think>|<\|thought_start\|>|<thought>|<z>|\[thinking\]|<thinking>|<reasoning>)/i;
+        
+        if (endTagsOnlyRegex.test(work) && !startTagsOnlyRegex.test(work)) {
+            work = "<think>\n" + work;
+        }
 
-            const isClosed = /(?:<\/think>|<\|thought_end\|>|<\/thought>)$/i.test(match);
-            isThoughtClosed = isClosed;
-
-            if (combinedThought === "") {
-                combinedThought = content;
-                firstThoughtId = `@@@THOUGHT_${blocks.length}@@@`;
-                blocks.push({ type: 'thought', content: '', isClosed: true });
-                return firstThoughtId;
-            } else {
-                combinedThought += "\n\n" + content;
-                return '';
+        const startTags = ['<think>', '<|thought_start|>', '<thought>', '<z>', '[thinking]', '<thinking>', '<reasoning>'];
+        const endTags = ['</think>', '<|thought_end|>', '</thought>', '</z>', '[answer]', '[/thinking]', '</thinking>', '</reasoning>'];
+        
+        while (true) {
+            let lowestIdx = -1;
+            let matchedStartTag = "";
+            for (const tag of startTags) {
+                const idx = work.toLowerCase().indexOf(tag.toLowerCase());
+                if (idx !== -1 && (lowestIdx === -1 || idx < lowestIdx)) {
+                    lowestIdx = idx;
+                    matchedStartTag = work.substring(idx, idx + tag.length);
+                }
             }
-        });
-
-        if (combinedThought !== "") {
-            const blockIndex = parseInt(firstThoughtId.match(/\d+/)[0]);
-            blocks[blockIndex].content = combinedThought;
-            blocks[blockIndex].isClosed = isThoughtClosed;
+            
+            if (lowestIdx === -1) break;
+            
+            const beforeThought = work.substring(0, lowestIdx);
+            let remaining = work.substring(lowestIdx + matchedStartTag.length);
+            
+            let depth = 1;
+            let thoughtContent = "";
+            let afterThought = "";
+            let currentIsClosed = false;
+            
+            const tagRegex = /(<think>|<\|thought_start\|>|<thought>|<z>|\[thinking\]|<thinking>|<reasoning>|<\/think>|<\|thought_end\|>|<\/thought>|<\/z>|\[answer\]|\[\/thinking\]|<\/thinking>|<\/reasoning>)/gi;
+            
+            let match;
+            let lastCloseIdx = -1;
+            let lastCloseLen = 0;
+            
+            while ((match = tagRegex.exec(remaining)) !== null) {
+                const tagStr = match[0].toLowerCase();
+                const isOpen = startTags.some(t => t.toLowerCase() === tagStr);
+                
+                if (isOpen) {
+                    depth++;
+                } else {
+                    depth--;
+                    lastCloseIdx = match.index;
+                    lastCloseLen = match[0].length;
+                }
+                
+                if (depth === 0) {
+                    thoughtContent = remaining.substring(0, match.index);
+                    afterThought = remaining.substring(match.index + match[0].length);
+                    currentIsClosed = true;
+                    break;
+                }
+            }
+            
+            if (depth > 0) {
+                // Unmatched open tags found. 
+                // If we saw AT LEAST ONE close tag, assume the LAST close tag was the actual end!
+                if (lastCloseIdx !== -1) {
+                    thoughtContent = remaining.substring(0, lastCloseIdx);
+                    afterThought = remaining.substring(lastCloseIdx + lastCloseLen);
+                    currentIsClosed = true;
+                } else {
+                    // Truly unclosed (e.g. streaming)
+                    thoughtContent = remaining;
+                    afterThought = "";
+                    currentIsClosed = false;
+                }
+            }
+            
+            if (combinedThought === "") {
+                combinedThought = thoughtContent.trim();
+                firstThoughtId = `@@@THOUGHT_${blocks.length}@@@`;
+                isThoughtClosed = currentIsClosed;
+                blocks.push({ type: 'thought', content: combinedThought, isClosed: isThoughtClosed });
+                work = beforeThought + firstThoughtId + afterThought;
+            } else {
+                combinedThought += "\n\n" + thoughtContent.trim();
+                const blockIndex = parseInt(firstThoughtId.match(/\d+/)[0]);
+                blocks[blockIndex].content = combinedThought;
+                blocks[blockIndex].isClosed = currentIsClosed;
+                isThoughtClosed = currentIsClosed;
+                work = beforeThought + afterThought;
+            }
         }
 
         work = work.replace(/<coding>([\s\S]*?)(?:<\/coding>|$)/gi, (match, p1) => {
@@ -1172,7 +1247,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const safeFilename = escapeHtml(block.filename);
                 const safeLang = escapeHtml(block.lang);
                 const safeId = escapeHtml(block.fileCardId || '');
-                const isHtml = block.lang && block.lang.toLowerCase() === 'html';
+                const isHtml = block.lang && block.lang.toLowerCase().startsWith('html');
                 html = `
                     <div class="file-card"
                          onclick="window.openCodeViewer(this)"
@@ -1299,7 +1374,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.fileCardCache[fcId] = block.content;
                         const safeFilename = escapeHtml(autoFilename);
                         const safeLang = escapeHtml(autoLang);
-                        const isAutoHtml = autoLang && autoLang.toLowerCase() === 'html';
+                        const isAutoHtml = autoLang && autoLang.toLowerCase().startsWith('html');
                         html = `
                             <div class="file-card"
                                  onclick="window.openCodeViewer(this)"
@@ -1482,7 +1557,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    function appendMessageDOM(role, text, scroll = true, imageUrl = null, attachmentName = null, sources = null) {
+    function appendMessageDOM(role, text, scroll = true, imageUrl = null, attachmentName = null, sources = null, fileCode = null) {
         const outer = document.createElement("div");
         outer.classList.add("message", role === "user" ? "user-message" : "ai-message");
 
@@ -1496,16 +1571,42 @@ document.addEventListener("DOMContentLoaded", () => {
             img.classList.add("chat-image");
             inner.appendChild(img);
         } else if (attachmentName) {
-            const fileBox = document.createElement("div");
-            fileBox.className = "chat-file-attachment";
-            fileBox.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span>${escapeHtml(attachmentName)}</span>
-            `;
-            inner.appendChild(fileBox);
+            if (fileCode) {
+                const fcId = 'user_file_' + Date.now() + Math.random().toString(36).substr(2, 9);
+                window.fileCardCache = window.fileCardCache || {};
+                window.fileCardCache[fcId] = fileCode;
+                
+                const extMatch = attachmentName.match(/\.([^.]+)$/);
+                const safeLang = extMatch ? escapeHtml(extMatch[1]) : 'text';
+                const safeFilename = escapeHtml(attachmentName);
+                
+                const fileBox = document.createElement("div");
+                fileBox.innerHTML = `
+                    <div class="file-card" data-filename="${safeFilename}" data-lang="${safeLang}" data-filecard-id="${fcId}" onclick="window.openCodeViewer(this)">
+                        <div class="file-card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="file-card-meta">
+                            <div class="file-card-name">${safeFilename}</div>
+                            <div class="file-card-sub">${safeLang} file</div>
+                        </div>
+                    </div>`;
+                inner.appendChild(fileBox.firstElementChild);
+            } else {
+                const fileBox = document.createElement("div");
+                fileBox.className = "chat-file-attachment";
+                fileBox.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    <span>${escapeHtml(attachmentName)}</span>
+                `;
+                inner.appendChild(fileBox);
+            }
         }
 
         if (role === "bot") {
@@ -1563,6 +1664,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let displayImageUrl = null;
         let attachmentName = null;
+        let fileCode = null;
 
         if (hasFiles) {
             const firstFile = window.selectedFiles[0];
@@ -1570,6 +1672,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 displayImageUrl = URL.createObjectURL(firstFile);
             } else {
                 attachmentName = window.selectedFiles.length > 1 ? `${window.selectedFiles.length} files attached` : firstFile.name;
+                if (window.selectedFiles.length === 1 && firstFile.size < 1024 * 1024) {
+                    try {
+                        fileCode = await firstFile.text();
+                    } catch (e) {
+                        console.error("Failed to read user file as text", e);
+                    }
+                }
             }
         }
 
@@ -1578,7 +1687,8 @@ document.addEventListener("DOMContentLoaded", () => {
             content: text,
             displayText: text || `[Attached: ${attachmentName || 'files'}]`,
             imageUrl: displayImageUrl,
-            attachmentName: attachmentName
+            attachmentName: attachmentName,
+            fileCode: fileCode
         };
 
         chat.messages.push(messageObj);
@@ -1586,7 +1696,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderChatList();
 
         enterChatMode();
-        appendMessageDOM('user', messageObj.displayText, true, displayImageUrl, attachmentName);
+        appendMessageDOM('user', messageObj.displayText, true, displayImageUrl, attachmentName, null, fileCode);
 
         chatInput.value = '';
         const filesToUpload = [...window.selectedFiles];

@@ -4,6 +4,7 @@ iris_merged_model/
 __pycache__/
 logs/*
 outputs/*
+benchmark/outputs/
 iris_14b_model/
 iris_vision_model/
 browser_profile/*

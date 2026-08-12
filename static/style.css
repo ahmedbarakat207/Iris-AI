@@ -572,7 +572,9 @@ body.chat-active .center-panel {
 .welcome-section {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    align-items: flex-start;
+    width: fit-content;
+    margin: 0 auto;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;
 }
@@ -584,12 +586,13 @@ body.chat-active .center-panel {
 }
 
 .hi-text {
-    background: linear-gradient(to right, var(--text-primary), transparent);
+    background: linear-gradient(to right, var(--text-primary) 10%, rgba(255, 255, 255, 0.35) 90%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
     display: block;
+    width: fit-content;
     font-size: 56px;
     font-weight: 700;
     margin: 35px 0 5px 0;
@@ -597,12 +600,13 @@ body.chat-active .center-panel {
 }
 
 .sub-text {
-    background: linear-gradient(to right, var(--text-primary), transparent);
+    background: linear-gradient(to right, var(--text-primary) 5%, rgba(255, 255, 255, 0.15) 85%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
     display: block;
+    width: fit-content;
     font-size: 45px;
     font-weight: 600;
     margin: 5px 0 50px 0;
@@ -2387,10 +2391,10 @@ body.chat-active .footere {
     .welcome-section {
         position: absolute !important;
         top: 50% !important;
-        transform: translateY(-50%) !important;
-        left: 24px !important;
-        right: 24px !important;
-        width: auto !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: max-content !important;
+        max-width: 90% !important;
         padding: 0 !important;
         margin: 0 !important;
         display: flex !important;
@@ -2415,7 +2419,7 @@ body.chat-active .footere {
         text-align: left !important;
         display: block !important;
         width: fit-content;
-        background: linear-gradient(to right, var(--text-primary), transparent);
+        background: linear-gradient(to right, var(--text-primary) 10%, rgba(255, 255, 255, 0.35) 90%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -2429,7 +2433,7 @@ body.chat-active .footere {
         display: block !important;
         width: fit-content;
         margin: 0;
-        background: linear-gradient(to right, var(--text-primary), transparent);
+        background: linear-gradient(to right, var(--text-primary) 5%, rgba(255, 255, 255, 0.15) 85%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;

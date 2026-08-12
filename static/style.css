@@ -2385,23 +2385,19 @@ body.chat-active .footere {
         position: absolute !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
-        left: 24px !important;
-        right: 24px !important;
-        width: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        padding: 0 24px !important;
         margin: 0 !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
         pointer-events: none !important;
         z-index: 100 !important;
-        transition: top 0.3s var(--ease-out-quart), transform 0.3s var(--ease-out-quart) !important;
-    }
-
-    body.keyboard-visible .welcome-section {
-        top: 32% !important;
-        transform: translateY(-50%) !important;
+        transition: opacity 0.3s var(--ease-out-quart) !important;
     }
 
     body.chat-active .welcome-section {
@@ -2412,9 +2408,9 @@ body.chat-active .footere {
         font-size: 42px;
         font-weight: 700;
         margin: 0 0 6px 0;
-        text-align: left;
+        text-align: center !important;
         display: inline-block;
-        width: fit-content;
+        width: auto;
         background: linear-gradient(to right, var(--text-primary), transparent);
         -webkit-background-clip: text;
         background-clip: text;
@@ -2425,9 +2421,9 @@ body.chat-active .footere {
     .sub-text {
         font-size: 30px;
         font-weight: 600;
-        text-align: left;
+        text-align: center !important;
         display: inline-block;
-        width: fit-content;
+        width: auto;
         margin: 0;
         background: linear-gradient(to right, var(--text-primary), transparent);
         -webkit-background-clip: text;

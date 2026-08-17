@@ -5,7 +5,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.iris.iris import ask_stream, ModelRole
+from src.iris import ask_stream, ModelRole
 
 def run_inference(prompt: str, role: ModelRole = None, use_routing: bool = True, keep_loaded: bool = False, verify_math: bool = False) -> tuple[str, float]:
     history = []
@@ -78,7 +78,7 @@ def append_to_csv(csv_path: str, row_dict: dict, fieldnames: list[str]):
         writer.writerow(row_dict)
 
 def get_size_name() -> str:
-    from src.iris.iris import load_generation_config
+    from src.iris import load_generation_config
     cfg = load_generation_config()
     size_name = cfg.get("size", "unknown")
     if size_name == "unknown":

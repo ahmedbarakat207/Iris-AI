@@ -99,3 +99,40 @@ document.addEventListener('DOMContentLoaded', () => {
         if (initialOpt) initialOpt.classList.add('selected');
     }
 });
+
+// Mobile Keyboard tracking via window resize (for native resizes-content)
+(function setupMobileKeyboard() {
+    if (window.innerWidth > 768) return;
+    
+    let initialHeight = window.innerHeight;
+    
+    function updateMobileKeyboard() {
+        const currentHeight = window.innerHeight;
+        // If height shrunk by more than 150px, keyboard is likely open
+        if (initialHeight - currentHeight > 150) {
+            document.body.classList.add('keyboard-visible');
+        } else {
+            document.body.classList.remove('keyboard-visible');
+            // Update initial height in case of orientation change
+            if (currentHeight > initialHeight) {
+                initialHeight = currentHeight;
+            }
+        }
+    }
+    window.addEventListener('resize', updateMobileKeyboard);
+    
+    // Focus fallbacks
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('focus', () => {
+            setTimeout(() => document.body.classList.add('keyboard-visible'), 200);
+        });
+        chatInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (window.innerHeight >= initialHeight - 150) {
+                    document.body.classList.remove('keyboard-visible');
+                }
+            }, 200);
+        });
+    }
+})();

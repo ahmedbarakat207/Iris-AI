@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from benchmark.utils import run_inference, append_to_csv
 from benchmark.compare import match, fix_common_format_issues
-from src.iris.iris import ModelRole
+from src.iris import ModelRole
 
 NUM_SAMPLES = 100
 FIELDNAMES  = ["Benchmark", "Role", "Prompt", "Expected", "Model_Answer", "Passed", "Time_Sec"]
@@ -161,7 +161,7 @@ def run_gpqa_benchmark(csv_path: str):
 
     
     try:
-        from src.iris.iris import unload_model
+        from src.iris import unload_model
         unload_model()
     except Exception:
         pass

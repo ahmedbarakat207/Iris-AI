@@ -9,7 +9,7 @@ import signal
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from benchmark.utils import run_inference, append_to_csv
-from src.iris.iris import ModelRole
+from src.iris import ModelRole
 
 NUM_SAMPLES = 3
 FIELDNAMES = ["Benchmark", "Role", "Prompt", "Expected", "Model_Answer", "Passed", "Time_Sec"]

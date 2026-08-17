@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2026-08-08 02:07:26,031 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
 2026-08-08 02:07:29,911 - src - WARNING - Lazy import skipped: iris_rag (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
 2026-08-08 02:07:29,912 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.logger')
@@ -51,3 +52,18 @@
 2026-08-08 02:21:59,390 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
 2026-08-08 02:21:59,737 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/coding_prompt.txt
 2026-08-08 02:21:59,737 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/reviewer_prompt.txt
+=======
+2026-08-09 20:41:43,074 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:42:46,852 - src - WARNING - Lazy import skipped: iris_rag (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:42:59,977 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:42:59,984 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:43:00,012 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:43:00,021 - src - WARNING - Lazy import skipped: context_compactor (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-09 20:44:12,233 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.hardware_profile')
+2026-08-09 20:44:12,236 - src - WARNING - Lazy import skipped: iris_rag (No module named 'src.iris.hardware_profile')
+2026-08-09 20:44:12,239 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.hardware_profile')
+2026-08-09 20:44:12,243 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.hardware_profile')
+2026-08-09 20:44:12,246 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.hardware_profile')
+2026-08-09 20:46:32,732 - src - WARNING - Lazy import skipped: iris (cannot import name 'get_active_role' from 'src.iris.engine' (D:\IRIS\IRIS\Iris-AI\src\iris\engine.py))
+2026-08-09 20:46:32,733 - src - WARNING - Lazy import skipped: iris_rag (cannot import name 'get_active_role' from 'src.iris.engine' (D:\IRIS\IRIS\Iris-AI\src\iris\engine.py))
+>>>>>>> origin/main

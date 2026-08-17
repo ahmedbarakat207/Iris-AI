@@ -623,7 +623,7 @@ def train_with_grpo(
 
 def _find_gguf_for_role(role: str) -> str:
 
-    model_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
+    model_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "models")
 
     role_to_pattern = {
         "code": "qwen2.5-coder",

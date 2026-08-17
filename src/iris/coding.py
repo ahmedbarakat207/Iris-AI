@@ -5,7 +5,7 @@ import logging
 from typing import Dict, List, Any, Generator, Optional
 
 logger = logging.getLogger("iris")
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     TaskType,
     load_model,
@@ -15,7 +15,7 @@ from src.iris.iris.engine import (
     SandboxResult,
     detect_user_language,
 )
-from src.iris.iris.engine import (
+from src.iris.engine import (
     _detect_language,
     translate_text,
     _language_directive,
@@ -35,7 +35,7 @@ from src.harness.harness import (
 from src.core.syntax_checker import check_syntax
 
 SKILLS_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "skills", "coding"
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "skills", "coding"
 )
 
 
@@ -273,7 +273,7 @@ def _fix_unclosed_code_blocks(text: str) -> str:
 
 def get_code_prompt(identity: str) -> str:
     try:
-        from src.iris.iris.engine import load_generation_config
+        from src.iris.engine import load_generation_config
 
         _sz = load_generation_config().get("size", "tiny")
     except Exception:
@@ -1654,7 +1654,7 @@ def run_stream(
         if os.path.exists(img_path):
             yield {"type": "status", "content": f"Analyzing image: {img_path}..."}
             try:
-                from src.iris.iris.vision import analyze_image
+                from src.iris.vision import analyze_image
 
                 vision_desc = analyze_image(
                     img_path,

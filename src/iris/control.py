@@ -1,6 +1,6 @@
 import logging
 from typing import Generator, Dict, Any
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     load_model,
     unload_model,

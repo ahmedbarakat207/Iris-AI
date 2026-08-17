@@ -59,7 +59,7 @@ def perform_gui_action(task: str, wait_seconds: float = 3.0) -> str:
         return f"[ERROR] GUI action failed: Could not capture screen: {e}"
 
     prompt_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "skills",
         "prompts",
         "gui_agent_prompt.txt",

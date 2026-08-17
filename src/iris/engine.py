@@ -19,14 +19,14 @@ os.environ["HF_XET_HIGH_PERFORMANCE"] = "1"
 os.environ["GGML_CUDA_NO_VMM"] = "1"
 warnings.filterwarnings("ignore")
 
-from .logger import get_logger
+from src.core.logger import get_logger
 
 logger = get_logger("iris")
 
 
 def _load_skill_prompt(skill_path: str) -> str:
     path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "skills",
         skill_path,
     )
@@ -91,8 +91,8 @@ from src.hca.compressed_attention import (
 )
 from src.hca.context_compactor import auto_compact_for_role
 
-from .hardware_profile import apply_to_config, ctx_for_role, get_hardware_profile
-from .hardware_profile import summary as hw_summary
+from src.core.hardware_profile import apply_to_config, ctx_for_role, get_hardware_profile
+from src.core.hardware_profile import summary as hw_summary
 
 try:
     import torch
@@ -190,7 +190,7 @@ _log_cb = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p)
     _llama_log_callback
 )
 llama_cpp.llama_log_set(_log_cb, ctypes.c_void_p(0))
-from .harness import (
+from src.harness.harness import (
     HERMES_AGENT_SYSTEM_PROMPT,
     HermesAgentLoop,
     HermesResultAnalyzer,
@@ -203,13 +203,13 @@ from .harness import (
     build_math_refinement_prompt,
     parse_hermes_tool_call,
 )
-from .harness import (
+from src.harness.harness import (
     apply_code_specific as _apply_harness,
 )
-from .harness import (
+from src.harness.harness import (
     apply_math as _apply_math_harness,
 )
-from .syntax_checker import check_syntax, extract_code_blocks
+from src.core.syntax_checker import check_syntax, extract_code_blocks
 
 
 class ModelRole(str, Enum):
@@ -1080,7 +1080,7 @@ def unload_model(role_to_evict: str = None, force_all: bool = False) -> None:
 def _force_unload_all_models() -> None:
     unload_model(force_all=True)
     try:
-        from src.iris.iris.vision import unload_vision_model
+        from src.iris.vision import unload_vision_model
 
         unload_vision_model()
     except Exception:
@@ -1088,12 +1088,12 @@ def _force_unload_all_models() -> None:
 
 
 def _system_prompt_for(role: ModelRole) -> str:
-    from src.iris.iris.coding import get_code_prompt, get_reviewer_prompt
-    from src.iris.iris.control import get_control_prompt
-    from src.iris.iris.general import get_general_prompt
-    from src.iris.iris.math import get_math_prompt
-    from src.iris.iris.reasoning import get_reasoning_prompt
-    from src.iris.iris.triage import TRIAGE_SYSTEM_PROMPT
+    from src.iris.coding import get_code_prompt, get_reviewer_prompt
+    from src.iris.control import get_control_prompt
+    from src.iris.general import get_general_prompt
+    from src.iris.math import get_math_prompt
+    from src.iris.reasoning import get_reasoning_prompt
+    from src.iris.triage import TRIAGE_SYSTEM_PROMPT
 
     GENERAL_SYSTEM_PROMPT = get_general_prompt(IRIS_IDENTITY)
     CODE_SYSTEM_PROMPT = get_code_prompt(IRIS_IDENTITY)
@@ -1783,7 +1783,7 @@ def _stream_tokens(
                 logger.info(f"[Escape Hatch] Evaluating Math: {expr}")
 
                 try:
-                    from src.iris.iris.coding import generate_internal_code
+                    from src.iris.coding import generate_internal_code
 
                     math_res = generate_internal_code(
                         "Solve this mathematical expression accurately.",
@@ -2260,7 +2260,7 @@ def _stream_tokens(
                 finish_reason = "length"
             elif role == ModelRole.CODE:
                 try:
-                    from src.iris.iris.pro import verify_code_syntax
+                    from src.iris.pro import verify_code_syntax
 
                     blocks = re.findall(r"```(\w*)\n(.*?)```", loop_content, re.DOTALL)
                     if blocks and patches_failed_this_turn == 0:

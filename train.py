@@ -23,7 +23,7 @@ try:
 except ImportError:
     torch = None
 
-from src.iris.iris.datasets import DatasetRegistry, load_markdown_files
+from src.iris.datasets import DatasetRegistry, load_markdown_files
 
 SYSTEM_PROMPT = "You are Iris, an intelligent and helpful AI assistant trained to assist the user with their tasks."
 

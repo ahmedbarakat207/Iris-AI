@@ -13,7 +13,7 @@ from typing import Any, AsyncGenerator
 
 import openai
 from openai import AsyncOpenAI
-from src.iris.iris.coding import get_code_prompt, get_reviewer_prompt
+from src.iris.coding import get_code_prompt, get_reviewer_prompt
 
 warnings.filterwarnings(
     "ignore", category=RuntimeWarning, message="coroutine method 'aclose'"
@@ -352,6 +352,7 @@ class OpenRouterClient:
             "temperature": temperature,
             "max_tokens": max_tokens,
             "stream": True,
+            "stream_options": {"include_usage": True},
         }
         if response_format:
             kwargs["response_format"] = response_format
@@ -898,9 +899,9 @@ async def ask_stream(
                         tools=HermesToolRegistry.get_openai_tools(),
                     ):
                         try:
-                            choice = chunk.get("choices", [{}])[0]
                             if chunk.get("usage"):
                                 last_usage = chunk["usage"]
+                            choice = chunk.get("choices", [{}])[0]
                             delta = choice.get("delta", {})
 
                             token = delta.get("content", "")
@@ -1235,9 +1236,9 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS_GENERAL,
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
                                 token = delta.get("content", "")
                                 if token:
@@ -1304,9 +1305,9 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS,
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
                                 token = delta.get("content", "")
                                 if token:
@@ -1374,9 +1375,9 @@ async def ask_stream(
                             extra_body={"include_reasoning": True},
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
 
                                 if (
@@ -1470,9 +1471,9 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS,
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
                                 token = delta.get("content", "")
                                 if token:
@@ -1560,6 +1561,7 @@ async def ask_stream(
 
             elif task_type == TaskType.CODING_COMPLEX:
                 raw_reasoning = ""
+                last_reasoning_usage = {}
                 raw_code = ""
                 raw_review = ""
 
@@ -1589,6 +1591,8 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS,
                             extra_body={"include_reasoning": True},
                         ):
+                            if chunk.get("usage"):
+                                last_reasoning_usage = chunk["usage"]
                             delta = chunk.get("choices", [{}])[0].get("delta", {})
 
                             if (
@@ -1622,7 +1626,7 @@ async def ask_stream(
                         hop1 = _timed_hop(
                             "1:reasoning",
                             Model.REASONING.value,
-                            {"content": raw_reasoning},
+                            {"content": raw_reasoning, "usage": last_reasoning_usage},
                             elapsed,
                         )
                         hop1.log_summary()
@@ -1671,9 +1675,9 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS,
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_code_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
                                 token = delta.get("content", "")
                                 if token:
@@ -1771,7 +1775,7 @@ async def ask_stream(
                     hop_code = _timed_hop(
                         "2:coding",
                         Model.CODE_COMPLEX.value,
-                        {"content": raw_code},
+                        {"content": raw_code, "usage": last_code_usage},
                         elapsed,
                     )
                     hop_code.log_summary()
@@ -1819,9 +1823,9 @@ async def ask_stream(
                             max_tokens=MAX_TOKENS,
                         ):
                             try:
-                                choice = chunk.get("choices", [{}])[0]
                                 if chunk.get("usage"):
                                     last_review_usage = chunk["usage"]
+                                choice = chunk.get("choices", [{}])[0]
                                 delta = choice.get("delta", {})
                                 token = delta.get("content", "")
                                 if token:
@@ -1958,9 +1962,9 @@ async def ask_stream(
                                 max_tokens=MAX_TOKENS,
                             ):
                                 try:
-                                    choice = chunk.get("choices", [{}])[0]
                                     if chunk.get("usage"):
                                         last_review_usage = chunk["usage"]
+                                    choice = chunk.get("choices", [{}])[0]
                                     delta = choice.get("delta", {})
                                     token = delta.get("content", "")
                                     if token:
@@ -2012,9 +2016,9 @@ async def ask_stream(
                     max_tokens=MAX_TOKENS,
                 ):
                     try:
-                        choice = chunk.get("choices", [{}])[0]
                         if chunk.get("usage"):
                             last_fast_usage = chunk["usage"]
+                        choice = chunk.get("choices", [{}])[0]
                         delta = choice.get("delta", {})
                         if "content" in delta and delta["content"]:
                             text = delta["content"]

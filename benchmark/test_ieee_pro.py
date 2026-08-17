@@ -1,23 +1,94 @@
 import os
 import sys
 import csv
+import re
 import time
 import asyncio
+import logging
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import benchmark.utils
-from src.iris.iris.pro import ask_stream
+from src.iris.pro import ask_stream
 
 _latest_metrics = {"ttft": 0.0, "speed": 0.0}
+_hop_log_lines: list[str] = []
+
+_HOP_RE = re.compile(
+    r"HOP\s+(\S+)\s+\|\s+model=(\S+)\s+\|\s+tokens=\[prompt=(\d+),\s*completion=(\d+),\s*total=(\d+)\]"
+)
+
+
+class _HopCapture(logging.Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        msg = self.format(record)
+        if "HOP" in msg and "tokens=" in msg:
+            _hop_log_lines.append(msg)
+
+
+_hop_handler = _HopCapture()
+logging.getLogger("iris_ai").addHandler(_hop_handler)
+
+
+def _print_hop_token_table(hop_lines: list[str]) -> None:
+    rows = []
+    for line in hop_lines:
+        m = _HOP_RE.search(line)
+        if m:
+            rows.append({
+                "stage": m.group(1),
+                "model": m.group(2),
+                "prompt": int(m.group(3)),
+                "completion": int(m.group(4)),
+                "total": int(m.group(5)),
+            })
+    if not rows:
+        return
+
+    col_w = {"stage": 28, "model": 36, "prompt": 10, "completion": 12, "total": 8}
+    header = (
+        f"  {'Stage':<{col_w['stage']}} "
+        f"{'Model':<{col_w['model']}} "
+        f"{'Prompt':>{col_w['prompt']}} "
+        f"{'Completion':>{col_w['completion']}} "
+        f"{'Total':>{col_w['total']}}"
+    )
+    sep = "  " + "-" * (sum(col_w.values()) + len(col_w) - 1)
+    print(sep)
+    print(header)
+    print(sep)
+    total_p = total_c = total_t = 0
+    for r in rows:
+        print(
+            f"  {r['stage']:<{col_w['stage']}} "
+            f"{r['model']:<{col_w['model']}} "
+            f"{r['prompt']:>{col_w['prompt']},} "
+            f"{r['completion']:>{col_w['completion']},} "
+            f"{r['total']:>{col_w['total']},}"
+        )
+        total_p += r["prompt"]
+        total_c += r["completion"]
+        total_t += r["total"]
+    print(sep)
+    print(
+        f"  {'TOTAL':<{col_w['stage']}} "
+        f"{'':<{col_w['model']}} "
+        f"{total_p:>{col_w['prompt']},} "
+        f"{total_c:>{col_w['completion']},} "
+        f"{total_t:>{col_w['total']},}"
+    )
+    print(sep)
+
 
 def run_inference_pro(prompt: str, role=None, use_routing=True, keep_loaded=False, verify_math=False) -> tuple[str, float]:
     start_t = time.time()
     full_response = ""
     ttft = 0.0
     tokens = 0
-    
+
+    _hop_log_lines.clear()
+
     async def _run():
         nonlocal full_response, ttft, tokens
         try:
@@ -30,11 +101,11 @@ def run_inference_pro(prompt: str, role=None, use_routing=True, keep_loaded=Fals
                     full_response += event["content"]
         except Exception as e:
             full_response = f"ERROR: {e}"
-            
+
     asyncio.run(_run())
-    
+
     end_t = time.time()
-    
+
     if verify_math and full_response and "ERROR" not in full_response:
         try:
             from benchmark.verify_math import verify_and_refine
@@ -48,6 +119,8 @@ def run_inference_pro(prompt: str, role=None, use_routing=True, keep_loaded=Fals
     decoding_speed = tokens / (elapsed - ttft) if (elapsed - ttft) > 0 else 0.0
     _latest_metrics["ttft"] = ttft
     _latest_metrics["speed"] = decoding_speed
+
+    _print_hop_token_table(list(_hop_log_lines))
 
     return full_response, elapsed
 
@@ -82,7 +155,7 @@ def compute_summary_stats(csv_path: str) -> dict:
                 key   = f"{bench} [{role}]"
                 if key not in summary:
                     summary[key] = {"latencies": [], "ttfts": [], "speeds": []}
-                
+
                 try:
                     lat = float(row.get("Time_Sec", 0.0))
                     summary[key]["latencies"].append(lat)
@@ -100,21 +173,21 @@ def compute_summary_stats(csv_path: str) -> dict:
                     summary[key]["speeds"].append(speed)
                 except ValueError:
                     pass
-                    
+
     except Exception as e:
         print(f"Error reading stats: {e}")
-    
+
     return summary
 
 def generate_ieee_report(summary: dict):
     report = "| Pipeline Stage / Task Type | Routed Model Baseline | Target Workload / Task Scope | TTFT (TTTFT) | Decoding Speed | Avg Hop Latency (Lavg) | P95 Latency (LP95) |\n"
-    report += "|----------------------------|-----------------------|------------------------------|--------------|----------------|------------------------|--------------------|\n"
+    report += "|----------------------------|-----------------------|------------------------------|--------------|----------------|------------------------|--------------------|\\n"
 
     for key, data in sorted(summary.items()):
         lats = data["latencies"]
         ttfts = data["ttfts"]
         speeds = data["speeds"]
-        
+
         avg_ttft = np.mean(ttfts) if ttfts else 0.0
         avg_speed = np.mean(speeds) if speeds else 0.0
         avg_lat = np.mean(lats) if lats else 0.0
@@ -133,7 +206,7 @@ def generate_ieee_report(summary: dict):
 
     with open("outputs/ieee_report_iris_pro.md", "w", encoding="utf-8") as f:
         f.write(report)
-    
+
     print("\n" + "="*80)
     print("  IEEE REPORT GENERATED: outputs/ieee_report_iris_pro.md")
     print("="*80 + "\n")
@@ -154,13 +227,18 @@ def main():
 
     import benchmark.test_coding
     import benchmark.test_swebench
-    
-    benchmark.test_coding.NUM_SAMPLES = 10
-    benchmark.test_swebench.NUM_SAMPLES = 10
+    import benchmark.test_gsm8k
+    import benchmark.test_math
+    import benchmark.test_mmlu
+    import benchmark.test_gpqa
 
     benchmarks = [
         (run_coding_benchmark, None),
         (run_swebench_benchmark, None),
+        (run_gsm8k_benchmark, None),
+        (run_math_benchmark, None),
+        (run_mmlu_benchmark, None),
+        (run_gpqa_benchmark, None),
     ]
 
     try:

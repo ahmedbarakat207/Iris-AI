@@ -1,0 +1,53 @@
+2026-08-08 02:07:26,031 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-08 02:07:29,911 - src - WARNING - Lazy import skipped: iris_rag (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-08 02:07:29,912 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.logger')
+2026-08-08 02:07:29,939 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-08 02:07:29,940 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-08 02:07:29,941 - src - WARNING - Lazy import skipped: context_compactor (No module named 'src.iris.iris.engine'; 'src.iris.iris' is not a package)
+2026-08-08 02:08:43,437 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.logger')
+2026-08-08 02:08:46,893 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.logger')
+2026-08-08 02:08:46,923 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.logger')
+2026-08-08 02:08:46,932 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.logger')
+2026-08-08 02:08:46,935 - src - WARNING - Lazy import skipped: context_compactor (No module named 'src.iris.logger')
+2026-08-08 02:09:24,428 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:26,682 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:27,002 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:27,002 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:27,003 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:32,848 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:35,079 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:35,403 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:35,404 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:35,404 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.hardware_profile')
+2026-08-08 02:09:50,553 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:51,165 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.harness')
+2026-08-08 02:09:51,174 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:51,188 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:51,189 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.harness')
+2026-08-08 02:09:51,192 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:51,193 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.harness')
+2026-08-08 02:09:51,196 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:09:51,196 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.harness')
+2026-08-08 02:10:09,914 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:10,435 - src - WARNING - Lazy import skipped: iris (No module named 'src.iris.harness')
+2026-08-08 02:10:10,452 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:10,468 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:10,468 - src - WARNING - Lazy import skipped: iris_engine (No module named 'src.iris.harness')
+2026-08-08 02:10:10,471 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:10,472 - src - WARNING - Lazy import skipped: iris_vision (No module named 'src.iris.harness')
+2026-08-08 02:10:10,475 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:10,475 - src - WARNING - Lazy import skipped: iris_coding (No module named 'src.iris.harness')
+2026-08-08 02:10:52,919 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:10:53,550 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:11:01,695 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:11:02,255 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:11:02,600 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/coding_prompt.txt
+2026-08-08 02:11:02,600 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/reviewer_prompt.txt
+2026-08-08 02:12:57,461 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:12:58,047 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:12:58,355 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/coding_prompt.txt
+2026-08-08 02:12:58,355 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/reviewer_prompt.txt
+2026-08-08 02:21:58,803 - iris - WARNING - [WARNING] RAG disabled due to library error: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:21:59,390 - iris - WARNING - [RAG] Failed to import sentence-transformers: Could not import module 'PreTrainedModel'. Are this object's requirements defined correctly?
+2026-08-08 02:21:59,737 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/coding_prompt.txt
+2026-08-08 02:21:59,737 - iris - WARNING - Prompt file not found: /Users/ahmed/Iris-AI/src/skills/coding/reviewer_prompt.txt

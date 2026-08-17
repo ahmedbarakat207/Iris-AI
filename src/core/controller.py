@@ -27,9 +27,9 @@ def _ensure_open_interpreter():
         print("[Iris] open-interpreter installed ✓\n", flush=True)
 
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from src.core.logger import get_logger
-from src.iris.iris.engine import (
+from src.iris.engine import (
     detect_user_language,
     translate_text,
     _model_pool,
@@ -61,7 +61,7 @@ _oi_step_counter = 0
 
 def _get_oi_system_message() -> str:
     path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "skills",
         "prompts",
         "oi_system_message.txt",
@@ -290,7 +290,7 @@ def _run_oi_task(task: str) -> Generator[Dict[str, str], None, str]:
         logger.info(f"[OI] chat completed: {task[:80]!r}")
 
         try:
-            from src.iris.iris.engine import unload_model
+            from src.iris.engine import unload_model
 
             unload_model(ModelRole.CODE.value)
             logger.info("[OI] Unloaded CODE model to free memory.")
@@ -552,8 +552,8 @@ def web_search(query: str, max_results: int = 5) -> str:
 CLIPBOARD_AVAILABLE = True
 try:
     from src.iris.iris import ask_stream
-    from src.iris.iris.rag import BookRetriever
-    from src.iris.iris.vision import analyze_image
+    from src.iris.rag import BookRetriever
+    from src.iris.vision import analyze_image
 
     IRIS_AVAILABLE = True
 except ImportError:
@@ -751,7 +751,7 @@ def ai_agent_handle_pro(user_input: str, retriever=None, history=None, **kwargs)
     import queue
     import threading
 
-    import src.iris.iris.pro as iris_pro
+    import src.iris.pro as iris_pro
 
     q = queue.Queue()
     mode = kwargs.get("settings", {}).get("mode", "smart")

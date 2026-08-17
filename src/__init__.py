@@ -1,19 +1,19 @@
-from .logger import get_logger
+from .core.logger import get_logger
 
 logger = get_logger("src")
 
 try:
-    from .iris import ask_stream
+    from .iris.iris import ask_stream
 except Exception as e:
     logger.warning(f"Lazy import skipped: iris ({e})")
 
 try:
-    from .iris_rag import BookRetriever
+    from .iris.rag import BookRetriever
 except Exception as e:
     logger.warning(f"Lazy import skipped: iris_rag ({e})")
 
 try:
-    from .iris_engine import (
+    from .iris.engine import (
         download_gguf,
         _MODEL_SOURCES,
         load_model,
@@ -27,17 +27,17 @@ except Exception as e:
     logger.warning(f"Lazy import skipped: iris_engine ({e})")
 
 try:
-    from .iris_vision import analyze_image
+    from .iris.vision import analyze_image
 except Exception as e:
     logger.warning(f"Lazy import skipped: iris_vision ({e})")
 
 try:
-    from .iris_coding import generate_internal_code
+    from .iris.coding import generate_internal_code
 except Exception as e:
     logger.warning(f"Lazy import skipped: iris_coding ({e})")
 
 try:
-    from .syntax_checker import check_syntax, extract_code_blocks
+    from .core.syntax_checker import check_syntax, extract_code_blocks
 except Exception as e:
     logger.warning(f"Lazy import skipped: syntax_checker ({e})")
 

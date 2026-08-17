@@ -7,7 +7,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from benchmark.utils import run_inference, append_to_csv
+from benchmark.utils import run_inference, append_to_csv, get_size_name
 from benchmark.compare import match, fix_common_format_issues
 from src.iris.iris import ModelRole
 
@@ -21,7 +21,7 @@ SUBJECTS = [
     "high_school_physics",
     "high_school_computer_science",
     "logical_fallacies",
-    "world_history",
+    "high_school_world_history",
     "philosophy",
     "college_medicine",
 ]

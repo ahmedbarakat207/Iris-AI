@@ -8,7 +8,7 @@ Relies strictly on LLM grammar-constraints to enforce valid route selection.
 import os
 
 _triage_guide_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
     "skills",
     "triage",
     "triage_routing_guide.md",
@@ -19,7 +19,7 @@ try:
 except Exception:
 
     _fallback_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "skills",
         "prompts",
         "triage_fallback.txt",
@@ -35,7 +35,7 @@ import logging
 import re
 from typing import Dict, List, Optional, Tuple
 
-from src.iris.iris.engine import (
+from src.iris.engine import (
     ModelRole,
     TaskType,
     load_model,
@@ -253,7 +253,7 @@ def classify_task(
     finally:
 
         try:
-            import src.iris.iris.engine as _engine
+            import src.iris.engine as _engine
 
             cfg = load_generation_config()
             if not _engine._keep_loaded and not cfg.get("keep_triage_loaded"):

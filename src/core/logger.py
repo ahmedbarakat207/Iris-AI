@@ -24,7 +24,7 @@ def _resolve_log_dir() -> str:
             log_dir = os.path.join(android_data, "iris", "logs")
     else:
 
-        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         log_dir = os.path.join(root, "logs")
 
     try:

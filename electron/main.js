@@ -88,15 +88,19 @@ function spawnBackend() {
   const rawArgs = process.argv.slice(2);
   const forwardArgs = [];
 
-  if (rawArgs.includes('--preview-only') || rawArgs.includes('--preview')) {
+  const isPro = rawArgs.includes('--pro') || process.env.npm_config_pro === 'true' || process.env.IRIS_PRO === '1';
+  const isPreview = rawArgs.includes('--preview-only') || rawArgs.includes('--preview') || process.env.npm_config_preview === 'true' || process.env.npm_config_preview_only === 'true' || process.env.IRIS_PREVIEW === '1';
+
+  if (isPreview) {
     forwardArgs.push('--preview-only');
     console.log('[Electron] Mode: Preview (Mock Responses)');
   } else {
     console.log('[Electron] Mode: Full AI Engine (Live Models)');
   }
 
-  if (rawArgs.includes('--pro')) {
+  if (isPro) {
     forwardArgs.push('--pro');
+    console.log('[Electron] Enabled Feature: Iris Pro Multi-Agent Routing');
   }
 
   try {

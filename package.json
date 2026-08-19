@@ -16,6 +16,10 @@
   "scripts": {
     "compile": "node scripts/compile_bytecode.js",
     "start": "npm run compile && electron .",
+    "start:pro": "npm run compile && electron . --pro",
+    "start:preview": "npm run compile && electron . --preview-only",
+    "pro": "npm run compile && electron . --pro",
+    "preview": "npm run compile && electron . --preview-only",
     "dev": "npm run compile && electron .",
     "icons": "python3 scripts/generate_icons.py",
     "pack": "npm run icons && npm run compile && electron-builder --dir",

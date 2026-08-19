@@ -1,0 +1,128 @@
+{
+  "name": "iris-ai",
+  "productName": "Iris AI",
+  "version": "1.0.0",
+  "description": "Iris AI - Next-Generation Multi-Agent Local AI Desktop Application",
+  "main": "dist-electron/main.js",
+  "author": {
+    "name": "Ahmed Barakat",
+    "email": "ahmedbarakat2017-2007@outlook.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmedbarakat207/Iris-AI"
+  },
+  "scripts": {
+    "compile": "node scripts/compile_bytecode.js",
+    "start": "npm run compile && electron .",
+    "dev": "npm run compile && electron .",
+    "icons": "python3 scripts/generate_icons.py",
+    "pack": "npm run icons && npm run compile && electron-builder --dir",
+    "dist": "npm run icons && npm run compile && electron-builder",
+    "dist:mac": "npm run icons && npm run compile && electron-builder --mac",
+    "dist:mac:arm64": "npm run icons && npm run compile && electron-builder --mac --arm64",
+    "dist:mac:x64": "npm run icons && npm run compile && electron-builder --mac --x64",
+    "dist:mac:universal": "npm run icons && npm run compile && electron-builder --mac --universal",
+    "dist:win": "npm run icons && npm run compile && electron-builder --win",
+    "dist:win:x64": "npm run icons && npm run compile && electron-builder --win --x64",
+    "dist:win:portable": "npm run icons && npm run compile && electron-builder --win portable",
+    "dist:linux": "npm run icons && npm run compile && electron-builder --linux",
+    "dist:linux:appimage": "npm run icons && npm run compile && electron-builder --linux AppImage",
+    "dist:linux:deb": "npm run icons && npm run compile && electron-builder --linux deb",
+    "dist:all": "npm run icons && npm run compile && electron-builder -mwl"
+  },
+  "devDependencies": {
+    "electron": "^39.8.8",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.ahmedbarakat.irisai",
+    "productName": "Iris AI",
+    "copyright": "Copyright © 2026 Ahmed Barakat",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "build/**/*",
+      "node_modules/bytenode/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "build/icon.icns",
+      "darkModeSupport": true,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "icon": "build/icon.icns",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 190,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "zip"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "shortcutName": "Iris AI"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "tar.gz"
+      ],
+      "icon": "build/icons",
+      "category": "Development",
+      "synopsis": "Iris AI Multi-Agent Local AI Workspace",
+      "description": "Desktop interface for Iris AI local multi-agent LLM systems."
+    },
+    "deb": {
+      "depends": [
+        "python3",
+        "libnotify4",
+        "libnss3",
+        "libasound2"
+      ]
+    }
+  },
+  "dependencies": {
+    "bytenode": "^1.6.0"
+  }
+}

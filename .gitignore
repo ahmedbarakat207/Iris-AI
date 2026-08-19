@@ -3,6 +3,8 @@ iris_lora_unified_*/
 iris_merged_model/
 __pycache__/
 logs/*
+src/logs/*
+*.log
 outputs/*
 benchmark/outputs/
 iris_14b_model/
@@ -19,3 +21,6 @@ iris_adapters/
 .claude/
 last_request.json
 iris_projects/*
+dist/
+dist-electron/
+build/icon.iconset/

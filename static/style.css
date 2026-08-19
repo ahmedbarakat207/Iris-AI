@@ -3524,3 +3524,33 @@ input:checked+.slider:before {
 [data-theme="light"] .custom-model-option .cm-check {
     color: var(--iris-purple);
 }
+
+/* ── Electron Desktop Integration & macOS Titlebar Spacing ── */
+.is-electron-darwin .top-bar {
+    padding-left: 84px !important;
+    -webkit-app-region: drag;
+}
+
+.is-electron-darwin .top-bar button,
+.is-electron-darwin .top-bar .icon-btn,
+.is-electron-darwin .top-bar a,
+.is-electron-darwin .top-bar input,
+.is-electron-darwin .top-bar select,
+.is-electron-darwin .top-bar .brand-wrapper-top,
+.is-electron-darwin .top-bar .custom-model-btn {
+    -webkit-app-region: no-drag;
+}
+
+.is-electron-darwin #quickNewChatBtnGlobal {
+    top: 66px !important;
+    left: 17px !important;
+}
+
+.is-electron-darwin .sidebar {
+    padding-top: 48px !important;
+}
+
+.is-electron-darwin .sidebar .header-row {
+    margin-top: 4px !important;
+    margin-bottom: 18px !important;
+}

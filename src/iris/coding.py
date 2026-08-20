@@ -271,6 +271,80 @@ def _fix_unclosed_code_blocks(text: str) -> str:
     return text
 
 
+def _generate_website_explanation(
+    code_text: str, user_query: str, user_lang: str = "English"
+) -> str:
+    """Generates a clean, professional summary of the generated website/code."""
+    last_fence = code_text.rfind("```")
+    if last_fence != -1:
+        after_code = code_text[last_fence + 3 :].strip()
+        if len(after_code) > 40 and not after_code.startswith("<file_card"):
+            return ""
+
+    title_match = re.search(r"<title>(.*?)</title>", code_text, re.IGNORECASE)
+    title = title_match.group(1).strip() if title_match else ""
+
+    has_cart = bool(
+        re.search(r"\b(cart|checkout|basket|buy)\b", code_text, re.IGNORECASE)
+    )
+    has_search = bool(
+        re.search(r"\b(search|filter|sort|category)\b", code_text, re.IGNORECASE)
+    )
+
+    if user_lang != "English":
+        bullets = []
+        if title:
+            bullets.append(f"**عنوان الموقع:** {title}")
+        bullets.append(
+            "**التصميم والواجهة:** تصميم عصري وجذاب متوافق بالكامل مع جميع الشاشات والأجهزة."
+        )
+        if has_search or has_cart:
+            feat_list = []
+            if has_search:
+                feat_list.append("البحث والتصفية السريعة للمنتجات")
+            if has_cart:
+                feat_list.append("سلة الشراء التفاعلية")
+            bullets.append(f"**الميزات التفاعلية:** تتضمن {', '.join(feat_list)}.")
+        else:
+            bullets.append(
+                "**الميزات والتفاعل:** عناصر تفاعلية وتأثيرات بصرية متناسقة لتجربة تصفح سلسة."
+            )
+        bullets.append(
+            "**المعاينة المباشرة:** يمكنك استعراض وتشغيل الموقع فوراً من خلال زر المعاينة (**Preview**) بالأعلى."
+        )
+
+        return "\n\n### 🌐 نبذة ومميزات الموقع\n" + "\n".join(
+            f"- {b}" for b in bullets
+        )
+    else:
+        bullets = []
+        if title:
+            bullets.append(f"**Project Title:** {title}")
+        bullets.append(
+            "**Modern Responsive UI:** Clean, mobile-friendly design styled with modern layout and typography."
+        )
+        if has_search or has_cart:
+            feat_list = []
+            if has_search:
+                feat_list.append("real-time search & filtering")
+            if has_cart:
+                feat_list.append("interactive shopping cart")
+            bullets.append(
+                f"**Interactive Features:** Includes {' and '.join(feat_list)}."
+            )
+        else:
+            bullets.append(
+                "**Interactive Components:** Dynamic user interactions and smooth transitions."
+            )
+        bullets.append(
+            "**Instant Preview:** Click the **Preview** button on the file card above to interact with the live website."
+        )
+
+        return "\n\n### 🌐 Website Highlights & Overview\n" + "\n".join(
+            f"- {b}" for b in bullets
+        )
+
+
 def get_code_prompt(identity: str) -> str:
     try:
         from src.iris.engine import load_generation_config
@@ -1052,31 +1126,12 @@ def _run_complex_coding(
             with open(fpath, "w", encoding="utf-8") as f:
                 f.write(content)
 
-        import socket
-        import subprocess
-        import sys
-
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.bind(("127.0.0.1", 0))
-        port = sock.getsockname()[1]
-        sock.close()
-
-        subprocess.Popen(
-            [sys.executable, "-m", "http.server", str(port)],
-            cwd=workspace_dir,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+        explanation = _generate_website_explanation(
+            final_output, user_query, user_lang
         )
-
-        scaffold_msg = f"\n\n> 📁 **Project Scaffolding Generated!** Your files have been saved locally in `{workspace_dir}`."
-        scaffold_msg += f"\n> 🎨 **Live Preview Server:** http://127.0.0.1:{port}"
-
-        if user_lang != "English":
-            scaffold_msg = f"\n\n> 📁 **تم بناء/تحديث المشروع بنجاح!** مسار العمل الحالي: `{workspace_dir}`."
-            scaffold_msg += f"\n> 🎨 **رابط المعاينة الحية:** [http://127.0.0.1:{port}](http://127.0.0.1:{port})"
-
-        final_output += scaffold_msg
-        yield {"type": "token", "content": scaffold_msg}
+        if explanation:
+            final_output += explanation
+            yield {"type": "token", "content": explanation}
 
     bash_blocks = re.findall(
         r"```(?:bash|sh)\n(.*?)\n```", final_output, re.IGNORECASE | re.DOTALL
@@ -1405,7 +1460,11 @@ def _run_simple_coding(
         yield {"type": "status", "content": f"Translating to {user_lang}..."}
         translated = translate_text(full, user_lang)
         full = translated
-        yield {"type": "token", "content": full}
+    if _is_web_design_request(user_query) and "```" in full:
+        explanation = _generate_website_explanation(full, user_query, user_lang)
+        if explanation:
+            full += explanation
+            yield {"type": "token", "content": explanation}
 
     yield {"type": "raw_response", "content": full}
 

@@ -277,7 +277,9 @@ def chat():
 
     from src.core import controller
     controller.IS_INTERACTIVE = False
-    from src.core.controller import ai_agent_handle
+    from src.core.controller import ai_agent_handle, ai_agent_handle_pro
+
+    handler_fn = ai_agent_handle_pro if PRO_MODE else ai_agent_handle
 
     def generate():
         with global_generation_lock:
@@ -291,7 +293,7 @@ def chat():
                 full_stream_text = ""
                 in_thought = False
 
-                for event in ai_agent_handle(
+                for event in handler_fn(
                     user_message,
                     retriever_instance,
                     agent_history,

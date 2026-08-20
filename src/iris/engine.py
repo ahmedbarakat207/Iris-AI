@@ -1197,8 +1197,19 @@ def _quality_guard(text: str) -> str:
         r"^The user wants current price.*",
         r"^The format is:.*",
     ]
-    for pat in meta_patterns:
-        text = re.sub(pat, "", text, flags=re.IGNORECASE | re.MULTILINE).strip()
+    # Remove markdown link syntax mistakenly placed inside HTML attributes (e.g. src="[https://...](https://...)")
+    text = re.sub(
+        r'(\b(?:src|href|action|poster|data-src)=["\'])\[(https?://[^\]\s]+)\]\([^)]+\)(["\'])',
+        r'\1\2\3',
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r'(\b(?:src|href|action|poster|data-src)=["\'])\[(https?://[^\]\s]+)\](["\'])',
+        r'\1\2\3',
+        text,
+        flags=re.IGNORECASE,
+    )
 
     text = re.sub(r"```\w*\s*```", "", text)
     text = re.sub(r"```\w*\s*\n```", "", text)
@@ -1206,6 +1217,19 @@ def _quality_guard(text: str) -> str:
 
     def _scrub_latex_in_code(m: re.Match) -> str:
         block = m.group(0)
+        # Fix markdown link syntax inside code blocks too
+        block = re.sub(
+            r'(\b(?:src|href|action|poster|data-src)=["\'])\[(https?://[^\]\s]+)\]\([^)]+\)(["\'])',
+            r'\1\2\3',
+            block,
+            flags=re.IGNORECASE,
+        )
+        block = re.sub(
+            r'(\b(?:src|href|action|poster|data-src)=["\'])\[(https?://[^\]\s]+)\](["\'])',
+            r'\1\2\3',
+            block,
+            flags=re.IGNORECASE,
+        )
         block = re.sub(r"\$([^$\n]*)\$", r"\1", block)
         block = re.sub(r"\$\$[\s\S]*?\$\$", "", block)
         block = re.sub(

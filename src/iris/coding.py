@@ -1706,8 +1706,6 @@ def run_stream(
                 f"{final_query}"
             )
 
-    final_query += _language_directive(user_query, role=ModelRole.CODE)
-
     optimized = [{"role": "user", "content": final_query}]
     if history:
         optimized = [

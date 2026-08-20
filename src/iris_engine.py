@@ -2616,15 +2616,13 @@ def _language_directive(
         is_thinking = _is_thinking_model(role)
 
     if is_thinking:
-        return (
-            "\n\n[SYSTEM DIRECTIVE: Respond strictly in English. "
-            "Enclose internal reasoning strictly inside <think> and </think> tags. "
-            "Provide the final answer after </think>.]"
-        )
+        # Thinking models already know their own <think> format natively.
+        # Adding explicit tag instructions causes the model to obsess over
+        # formatting rules in its thinking block instead of answering.
+        return ""
     else:
         return (
-            "\n\n[SYSTEM DIRECTIVE: Respond strictly in English. "
-            "Answer the query directly in English without internal reasoning.]"
+            "\n\n[SYSTEM DIRECTIVE: Answer the query directly without preamble.]"
         )
 
 

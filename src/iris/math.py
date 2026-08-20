@@ -8,7 +8,7 @@ from src.iris.engine import (
     _stream_tokens,
     load_generation_config,
 )
-from src.iris.engine import detect_user_language, _language_directive
+from src.iris.engine import detect_user_language
 from src.iris.engine import (
     _quality_guard,
     translate_text,
@@ -49,7 +49,6 @@ def run_stream(
             f"{final_query}"
         )
 
-    final_query += _language_directive(user_query, role=ModelRole.MATH)
     final_query += "\n\nCRITICAL INSTRUCTION: You MUST solve this problem purely analytically. DO NOT write any Python code, sympy scripts, or code blocks. DO NOT use HTML tags like <span>, CSS styling, or \\boxed{}. Just write your final answer in clean plain LaTeX (e.g. $x = 5$ or $$x = 5$$)."
 
     optimized = [{"role": "user", "content": final_query}]

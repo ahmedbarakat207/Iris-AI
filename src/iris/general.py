@@ -12,7 +12,6 @@ from src.iris.engine import (
 
 from src.iris.engine import (
     detect_user_language,
-    _language_directive,
     translate_text,
     _load_skill_prompt,
     ModelRole,
@@ -67,8 +66,6 @@ def run_stream(
             f"INSTRUCTIONS: Use the search results above to inform your answer, especially for recent events or specific facts. "
             f"If the search results are incomplete, you may use your internal knowledge to supplement the answer."
         )
-
-    final_query += _language_directive(user_query, role=ModelRole.GENERAL)
 
     optimized = [{"role": "user", "content": final_query}]
     if history:

@@ -19,7 +19,7 @@ from src.iris.engine import (
     _quality_guard,
 )
 
-from src.iris.engine import detect_user_language, _language_directive, translate_text
+from src.iris.engine import detect_user_language, translate_text
 
 logger = logging.getLogger("iris")
 
@@ -79,8 +79,6 @@ def run_stream(
             f"INSTRUCTIONS:\n"
             f"Use the search results above to inform your answer. If the search results are incomplete, you may use your internal knowledge to supplement the answer.\n"
         )
-
-    final_query += _language_directive(user_query, role=ModelRole.REASONING)
 
     optimized = [{"role": "user", "content": final_query}]
     if history:

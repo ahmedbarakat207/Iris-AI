@@ -534,16 +534,32 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
             )
 
     # 5. Ensure <body> has dark background and text classes
+    _LIGHT_BG_PATTERN = re.compile(
+        r'\bbg-(?:'
+        r'white|gray-[0-4]\d{2}|grey-[0-4]\d{2}|'
+        r'slate-[0-4]\d{2}|zinc-[0-4]\d{2}|neutral-[0-4]\d{2}|stone-[0-4]\d{2}|'
+        r'amber-\d{2,3}|yellow-\d{2,3}|orange-\d{2,3}|brown-\d{2,3}|'
+        r'red-[1-4]\d{2}|green-[1-4]\d{2}|blue-[1-4]\d{2}|sky-[1-4]\d{2}|'
+        r'cyan-[1-4]\d{2}|teal-[1-4]\d{2}|indigo-[1-4]\d{2}|purple-[1-4]\d{2}|'
+        r'pink-[1-4]\d{2}|rose-[1-4]\d{2}|fuchsia-[1-4]\d{2}|violet-[1-4]\d{2}|'
+        r'lime-\d{2,3}|emerald-[1-4]\d{2}|'
+        r'gray-500|zinc-500|slate-500|neutral-500|stone-500'
+        r')\b',
+        re.IGNORECASE
+    )
+
     def _fix_body_tag(match):
         attrs = match.group(1) or ""
         class_match = re.search(r'class\s*=\s*(["\'])(.*?)\1', attrs, re.IGNORECASE)
         if class_match:
             classes = class_match.group(2)
             new_classes = classes
-            # If body has ugly solid brown/yellow/amber saturated background, normalize to slate-950
-            new_classes = re.sub(r'\bbg-(?:amber|yellow|orange|brown)-\d{2,3}\b', 'bg-slate-950', new_classes)
-            if not re.search(r"\bbg-", new_classes):
-                new_classes = f"bg-slate-950 {new_classes}".strip()
+            # Replace any light or wrong background colors with dark
+            new_classes = _LIGHT_BG_PATTERN.sub('bg-slate-950', new_classes)
+            # If still no dark bg, add one
+            if not re.search(r"\bbg-(?:slate|zinc|neutral|stone|gray|black)-[6-9]\d{2}\b|\bbg-(?:slate|zinc|neutral|stone|gray|black)-\d{3}\b", new_classes):
+                if not re.search(r"\bbg-", new_classes):
+                    new_classes = f"bg-slate-950 {new_classes}".strip()
             if not re.search(r"\btext-", new_classes):
                 new_classes = f"{new_classes} text-zinc-100".strip()
             if "min-h-screen" not in new_classes:
@@ -558,9 +574,19 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
             )
             return f"<body{fixed_attrs}>"
         else:
+            # No class attr at all — inject full dark theme
             return f'<body class="bg-slate-950 text-zinc-100 min-h-screen relative overflow-x-hidden"{attrs}>'
 
     text = re.sub(r"<body([^>]*)>", _fix_body_tag, text, count=1, flags=re.IGNORECASE)
+
+    # 5b. Also kill any CSS background-color on body element set to light/white colors
+    def _fix_body_css_bg(m):
+        css = m.group(0)
+        css = re.sub(r'background(?:-color)?\s*:\s*(?:#(?:f|e|d|c|b|a|9)[0-9a-fA-F]{5}|white|#fff|#ffffff|rgb\(2[0-5]\d[^)]*\)|rgba\(2[0-5]\d[^)]*\))',
+                     'background-color: #020617', css, flags=re.IGNORECASE)
+        return css
+
+    text = re.sub(r'body\s*\{[^}]*\}', _fix_body_css_bg, text, flags=re.IGNORECASE)
 
     # 6. Ensure lucide.createIcons() is called before </body>
     if "createicons" not in text.lower() and "lucide" in text.lower():

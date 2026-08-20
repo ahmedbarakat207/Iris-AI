@@ -729,7 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Truly unclosed (e.g. streaming)
                     thoughtContent = remaining;
                     afterThought = "";
-                    currentIsClosed = false;
+                    currentIsClosed = !isStreaming;
                 }
             }
             
@@ -1139,12 +1139,13 @@ document.addEventListener("DOMContentLoaded", () => {
             let id, html;
             if (block.type === 'thought') {
                 id = `@@@THOUGHT_${index}@@@`;
-                const tKey = 't_' + index;
+                const isLiveStream = isStreaming && !block.isClosed;
+                const tKey = isLiveStream ? ('t_stream_' + index) : ('t_closed_' + index);
                 window.toggledBlocks = window.toggledBlocks || {};
-                let isExpanded = window.toggledBlocks[tKey] !== undefined ? window.toggledBlocks[tKey] : true;
+                let isExpanded = window.toggledBlocks[tKey] !== undefined ? window.toggledBlocks[tKey] : isLiveStream;
                 let inner = escapeHtml(block.content || '').replace(/\n/g, '<br>');
 
-                if (!block.isClosed) {
+                if (isLiveStream) {
                     const animDelay = -(Date.now() % 1000);
                     html = `
                         <div class="thought-wrapper ${isExpanded ? 'expanded' : ''}">
@@ -1708,6 +1709,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showTypingIndicator();
 
         window._inThinkingStream = false;
+        window.toggledBlocks = {};
 
         let fullReply = "";
         let actionResult = "";

@@ -776,6 +776,7 @@ body.chat-active .center-panel {
 }
 
 .thought-header .chevron {
+    margin-inline-start: auto;
     margin-left: auto;
     transition: transform 0.4s var(--ease-out-quart);
     opacity: 0.6;

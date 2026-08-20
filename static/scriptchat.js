@@ -1790,7 +1790,15 @@ document.addEventListener("DOMContentLoaded", () => {
                             firstTokenReceived = true;
                         }
                         const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
-                        aiContentDiv.innerHTML = formatMessage(currentResponseText, true);
+                        let renderedHtml = formatMessage(currentResponseText, true);
+                        if (window._pendingSources && window._pendingSources.length > 0) {
+                            renderedHtml += '<div class="sources-container"><div class="sources-title">Sources</div><div class="sources-list">';
+                            window._pendingSources.forEach(s => {
+                                renderedHtml += `<a class="source-chip" href="${s.url}" target="_blank" rel="noopener noreferrer">${s.domain}</a>`;
+                            });
+                            renderedHtml += '</div></div>';
+                        }
+                        aiContentDiv.innerHTML = renderedHtml;
                         if (isAtBottom) {
                             chatMessages.scrollTop = chatMessages.scrollHeight;
                         }
@@ -1895,6 +1903,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             rawResponseText = event.content;
                         } else if (event.type === "sources") {
                             window._pendingSources = event.sources;
+                            scheduleRender();
                         } else if (event.type === "compact_history") {
                             chat.messages = event.messages;
                             savePersist();
@@ -1916,6 +1925,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            if (renderTimer !== null) {
+                clearTimeout(renderTimer);
+                renderTimer = null;
+            }
+
             setGeneratingState(false);
             if (!firstTokenReceived) {
                 removeTypingIndicator();
@@ -1930,8 +1944,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Clean up currentResponseText before saving to prevent corrupting the LLM context
             let cleanResponse = currentResponseText;
+            const finalSources = window._pendingSources;
 
-            chat.messages.push({ role: 'bot', content: cleanResponse, sources: window._pendingSources });
+            chat.messages.push({ role: 'bot', content: cleanResponse, sources: finalSources });
             savePersist();
 
             // Regenerate title after every complete exchange (debounced 3s)
@@ -1940,15 +1955,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // Final render to apply non-streaming fallback logic (like stripping unclosed <think> tags)
             if (aiContentDiv) {
                 let finalHtml = formatMessage(cleanResponse, false);
-                if (window._pendingSources && window._pendingSources.length > 0) {
+                if (finalSources && finalSources.length > 0) {
                     finalHtml += '<div class="sources-container"><div class="sources-title">Sources</div><div class="sources-list">';
-                    window._pendingSources.forEach(s => {
+                    finalSources.forEach(s => {
                         finalHtml += `<a class="source-chip" href="${s.url}" target="_blank" rel="noopener noreferrer">${s.domain}</a>`;
                     });
                     finalHtml += '</div></div>';
-                    window._pendingSources = null;
                 }
                 aiContentDiv.innerHTML = finalHtml;
+                window._pendingSources = null;
                 setTimeout(() => { if (typeof Prism !== 'undefined') Prism.highlightAll(); }, 50);
             }
 

@@ -131,4 +131,15 @@ def run_stream(
         yield {"type": "token", "content": "I am Iris AI."}
         display_content = "I am Iris AI."
 
+    if web_context:
+        sources = re.findall(r"\[source\]\((.*?)\)", web_context)
+        if sources:
+            unique_sources = []
+            for s in list(dict.fromkeys(sources)):
+                domain = s.split("://")[-1].split("/")[0]
+                if domain.startswith("www."):
+                    domain = domain[4:]
+                unique_sources.append({"url": s, "domain": domain})
+            yield {"type": "sources", "sources": unique_sources}
+
     yield {"type": "raw_response", "content": display_content}

@@ -432,6 +432,193 @@ def enforce_contrast(text: str, language: str = "") -> Tuple[str, List[str]]:
     return (new_text, warnings)
 
 
+def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
+    """Repairs and elevates generated HTML to ensure premium styling, Tailwind CDN,
+    Lucide icons, Google fonts, and consistent dark-mode background/contrast."""
+    warnings: List[str] = []
+
+    is_html = (
+        language.lower() in ("html", "htm")
+        or "<!doctype html" in text.lower()
+        or "<html" in text.lower()
+        or ("<head" in text.lower() and "<body" in text.lower())
+        or (
+            "<div" in text.lower()
+            and "class=" in text.lower()
+            and ("tailwind" in text.lower() or "bg-" in text.lower())
+        )
+    )
+    if not is_html:
+        return (text, warnings)
+
+    # 1. Normalize and ensure standard document structure if it's a bare snippet
+    has_html_tag = bool(re.search(r"<html[\s>]", text, re.IGNORECASE))
+    has_body_tag = bool(re.search(r"<body[\s>]", text, re.IGNORECASE))
+
+    if not has_body_tag and not has_html_tag:
+        text = (
+            f"<!DOCTYPE html>\n<html lang=\"en\" class=\"scroll-smooth\">\n<head>\n"
+            f'  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+            f"  <title>Iris Web Application</title>\n"
+            f'  <script src="https://cdn.tailwindcss.com"></script>\n'
+            f'  <script src="https://unpkg.com/lucide@latest"></script>\n'
+            f'  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">\n'
+            f"  <style>body {{ font-family: 'Plus Jakarta Sans', sans-serif; }}</style>\n"
+            f"</head>\n<body class=\"bg-zinc-950 text-zinc-100 min-h-screen relative overflow-x-hidden\">\n"
+            f"{text}\n"
+            f"  <script>if (window.lucide) {{ lucide.createIcons(); }}</script>\n"
+            f"</body>\n</html>"
+        )
+        warnings.append(
+            "HTML: Wrapped partial snippet with full Tailwind & Lucide document structure"
+        )
+        return (text, warnings)
+
+    # 2. Inject Tailwind CDN if missing
+    if "cdn.tailwindcss.com" not in text and "tailwindcss" not in text.lower():
+        tailwind_script = (
+            '  <script src="https://cdn.tailwindcss.com"></script>\n'
+        )
+        if "<head>" in text:
+            text = text.replace("<head>", f"<head>\n{tailwind_script}", 1)
+        elif "<head " in text:
+            text = re.sub(
+                r"(<head[^>]*>)",
+                r"\1\n" + tailwind_script,
+                text,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        elif "<body" in text:
+            text = re.sub(
+                r"(<body[^>]*>)",
+                r"<head>\n" + tailwind_script + r"</head>\n\1",
+                text,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        warnings.append("HTML: Injected Tailwind CSS CDN into <head>")
+
+    # 3. Inject Lucide Icons if missing
+    if "lucide" not in text.lower():
+        lucide_script = (
+            '  <script src="https://unpkg.com/lucide@latest"></script>\n'
+        )
+        if "</head>" in text:
+            text = text.replace("</head>", f"{lucide_script}</head>", 1)
+        elif "<body" in text:
+            text = re.sub(
+                r"(<body[^>]*>)",
+                r"\1\n" + lucide_script,
+                text,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        warnings.append("HTML: Injected Lucide Icons library")
+
+    # 4. Inject Google Fonts if no external font link
+    if "fonts.googleapis.com" not in text:
+        font_link = (
+            '  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">\n'
+            "  <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>\n"
+        )
+        if "</head>" in text:
+            text = text.replace("</head>", f"{font_link}</head>", 1)
+        elif "<body" in text:
+            text = re.sub(
+                r"(<body[^>]*>)",
+                r"\1\n" + font_link,
+                text,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+
+    # 5. Ensure <body> has dark background and text classes
+    def _fix_body_tag(match):
+        attrs = match.group(1) or ""
+        class_match = re.search(r'class\s*=\s*(["\'])(.*?)\1', attrs, re.IGNORECASE)
+        if class_match:
+            classes = class_match.group(2)
+            new_classes = classes
+            if not re.search(r"\bbg-", classes):
+                new_classes = f"bg-zinc-950 {new_classes}".strip()
+            if not re.search(r"\btext-", classes):
+                new_classes = f"{new_classes} text-zinc-100".strip()
+            if "min-h-screen" not in classes:
+                new_classes = f"{new_classes} min-h-screen".strip()
+            if "overflow-x-hidden" not in classes:
+                new_classes = f"{new_classes} overflow-x-hidden".strip()
+
+            fixed_attrs = (
+                attrs[: class_match.start()]
+                + f'class="{new_classes}"'
+                + attrs[class_match.end() :]
+            )
+            return f"<body{fixed_attrs}>"
+        else:
+            return f'<body class="bg-zinc-950 text-zinc-100 min-h-screen relative overflow-x-hidden"{attrs}>'
+
+    text = re.sub(r"<body([^>]*)>", _fix_body_tag, text, count=1, flags=re.IGNORECASE)
+
+    # 6. Ensure lucide.createIcons() is called before </body>
+    if "createicons" not in text.lower() and "lucide" in text.lower():
+        init_script = "\n  <script>\n    if (window.lucide) { lucide.createIcons(); }\n  </script>\n"
+        if "</body>" in text:
+            text = text.replace("</body>", f"{init_script}</body>", 1)
+        else:
+            text += init_script
+
+    # 7. Fix background decorative ribbon layers that block text
+    def _fix_decorations(match):
+        tag_str = match.group(0)
+        if "rotate" in tag_str or "transform" in tag_str or "blur-" in tag_str:
+            if "pointer-events-none" not in tag_str:
+                tag_str = tag_str.replace(
+                    'class="', 'class="pointer-events-none -z-10 '
+                )
+                tag_str = tag_str.replace(
+                    "class='", "class='pointer-events-none -z-10 "
+                )
+        return tag_str
+
+    text = re.sub(
+        r'<div[^>]*class=["\'][^"\']*(?:rotate|blur-|transform)[^"\']*["\'][^>]*>',
+        _fix_decorations,
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    # 8. Fix unstyled plain CTA links or buttons
+    def _fix_bare_cta(match):
+        tag = match.group(1).lower()
+        attrs = match.group(2)
+        inner = match.group(3)
+        if "class=" not in attrs.lower() and any(
+            w in inner.lower()
+            for w in [
+                "shop",
+                "buy",
+                "order",
+                "explore",
+                "get started",
+                "book",
+                "contact",
+                "learn more",
+            ]
+        ):
+            return f'<{tag}{attrs} class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20">{inner}</{tag}>'
+        return match.group(0)
+
+    text = re.sub(
+        r"<(a|button)([^>]*)>([^<]{2,30})</\1>",
+        _fix_bare_cta,
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    return (text, warnings)
+
+
 def normalize_header(text: str, language: str = "python") -> Tuple[str, List[str]]:
     warnings: List[str] = []
     if language.lower() not in ("python", "py", "bash", "sh") or "```" in text:
@@ -662,6 +849,7 @@ _PASSES = [
     ("redact_secrets", redact_secrets),
     ("repair_truncation", repair_truncation),
     ("enforce_contrast", enforce_contrast),
+    ("repair_html", repair_html),
     ("inject_imports", inject_imports),
     ("normalize_header", normalize_header),
     ("deduplicate_blocks", deduplicate_blocks),

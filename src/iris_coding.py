@@ -236,6 +236,15 @@ def _fix_unclosed_code_blocks(text: str) -> str:
 
 
 def get_code_prompt(identity: str) -> str:
+    try:
+        from src.iris.engine import load_generation_config
+        _sz = load_generation_config().get("size", "tiny")
+    except Exception:
+        _sz = "tiny"
+    if _sz == "tiny":
+        tiny_prompt = _load_prompt("tiny/coding_prompt.txt")
+        if tiny_prompt:
+            return tiny_prompt.replace("{identity}", identity) if "{identity}" in tiny_prompt else f"{identity}\n{tiny_prompt}"
     prompt = _load_prompt("coding_prompt.txt")
     return f"{identity}\n{prompt}"
 

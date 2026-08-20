@@ -355,6 +355,16 @@ def get_code_prompt(identity: str) -> str:
 
     if _sz in ["large", "max"]:
         return f"{identity}\nYou are an expert, creative AI software developer and web designer. Your goal is to write clean, production-quality, and highly dynamic code based exactly on the constraints and UI elements provided in the prompt."
+    elif _sz == "tiny":
+        tiny_prompt = _load_prompt("tiny/coding_prompt.txt")
+        if tiny_prompt:
+            return (
+                tiny_prompt.replace("{identity}", identity)
+                if "{identity}" in tiny_prompt
+                else f"{identity}\n{tiny_prompt}"
+            )
+        prompt = _load_prompt("coding_prompt.txt")
+        return f"{identity}\n{prompt}"
     else:
         prompt = _load_prompt("coding_prompt.txt")
         return f"{identity}\n{prompt}"

@@ -2562,7 +2562,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bodyArea.style.cssText = 'flex:1;display:flex;justify-content:center;align-items:center;padding:24px;overflow:hidden;';
 
         const iframeWrapper = document.createElement('div');
-        iframeWrapper.style.cssText = 'width:100%;height:100%;max-width:100%;max-height:100%;background:#fff;border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,0.6);overflow:hidden;transition:width 0.4s cubic-bezier(0.16,1,0.3,1);';
+        iframeWrapper.style.cssText = 'width:100%;height:100%;max-width:100%;max-height:100%;background:#09090b;border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,0.6);overflow:hidden;transition:width 0.4s cubic-bezier(0.16,1,0.3,1);';
 
         const iframe = document.createElement('iframe');
         iframe.style.cssText = 'width:100%;height:100%;border:none;';
@@ -2798,7 +2798,7 @@ document.addEventListener("DOMContentLoaded", () => {
         iframeWrapper.style.height = '100%';
         iframeWrapper.style.maxWidth = '100%';
         iframeWrapper.style.maxHeight = '100%';
-        iframeWrapper.style.backgroundColor = '#fff';
+        iframeWrapper.style.backgroundColor = '#09090b';
         iframeWrapper.style.borderRadius = '16px';
         iframeWrapper.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6)';
         iframeWrapper.style.overflow = 'hidden';

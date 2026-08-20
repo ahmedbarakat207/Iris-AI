@@ -267,8 +267,62 @@ def _fix_unclosed_code_blocks(text: str) -> str:
         return block
 
     text = re.sub(r"```[\s\S]*?```", _strip_trailing_text, text)
-
+    text = _fuse_separated_web_blocks(text)
     return text
+
+
+def _fuse_separated_web_blocks(text: str) -> str:
+    """If the model generates multiple separated code blocks (HTML, CSS, JS) for a website,
+    fuse them into a single self-contained HTML file so the user can preview the full website."""
+    pattern = r"```([a-zA-Z0-9_-]*)\s*\n([\s\S]*?)```"
+    blocks = re.findall(pattern, text)
+    if len(blocks) <= 1:
+        return text
+
+    html_block = None
+    css_blocks = []
+    js_blocks = []
+
+    for lang, content in blocks:
+        l = lang.lower().strip()
+        c = content.strip()
+        if "<!doctype html" in c.lower() or "<html" in c.lower() or l in ("html", "htm"):
+            if not html_block:
+                html_block = c
+        elif l in ("css", "style", "styles") or (l == "" and ("{" in c and "}" in c and ":" in c and ("px" in c or "rem" in c or "color" in c or "background" in c))):
+            css_blocks.append(c)
+        elif l in ("js", "javascript", "ts", "typescript") or (l == "" and ("function" in c or "const " in c or "let " in c or "document." in c or "addEventListener" in c)):
+            js_blocks.append(c)
+
+    if not html_block:
+        return text
+
+    combined_css = "\n".join(css_blocks).strip()
+    if combined_css and combined_css not in html_block:
+        style_tag = f"\n  <style>\n{combined_css}\n  </style>\n"
+        if "</head>" in html_block:
+            html_block = html_block.replace("</head>", f"{style_tag}</head>", 1)
+        elif "<body" in html_block:
+            html_block = re.sub(r"(<body[^>]*>)", f"{style_tag}\\1", html_block, count=1, flags=re.IGNORECASE)
+        else:
+            html_block = style_tag + html_block
+
+    combined_js = "\n".join(js_blocks).strip()
+    if combined_js and combined_js not in html_block:
+        script_tag = f"\n  <script>\n{combined_js}\n  </script>\n"
+        if "</body>" in html_block:
+            html_block = html_block.replace("</body>", f"{script_tag}</body>", 1)
+        else:
+            html_block += script_tag
+
+    clean_prose = re.sub(r"<file_card[^>]*?>.*?</file_card>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    clean_prose = re.sub(r"<file_card[^>]*/>", "", clean_prose, flags=re.IGNORECASE)
+    clean_prose = re.sub(pattern, "", clean_prose).strip()
+
+    fused_result = f"```html\n{html_block}\n```\n<file_card filename=\"index.html\" lang=\"html\"></file_card>"
+    if clean_prose:
+        fused_result += f"\n\n{clean_prose}"
+    return fused_result
 
 
 def _generate_website_explanation(

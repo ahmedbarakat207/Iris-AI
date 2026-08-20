@@ -1286,35 +1286,7 @@ def run_stream(user_query: str, history: list, retriever: Any, settings: dict, i
         except Exception as e:
             logger.warning(f"Failed to scan elements DB: {e}")
         
-        if _is_small_model:
-            # Compact directive for tiny/small — preserves output budget
-            theme = random.choice(_DESIGN_THEMES)
-            final_query += (
-                f"\n\n[DESIGN DIRECTIVE — READ EVERY LINE]\n"
-                f"Write a COMPLETE, FULL-LENGTH single-file HTML website. DO NOT stop early or truncate. Finish with </html>.\n"
-                f"STYLE: bg-zinc-950 body, glassmorphic cards (bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-6), "
-                f"accent {theme['primary']}-400→{theme['primary']}-600, Google Font {theme['font_body']}, "
-                f"fixed nav (bg-zinc-950/80 backdrop-blur-md), body pt-28.\n"
-                f"LAYOUT RULES (wrong placement breaks the UI):\n"
-                f"  - Hero section: class='relative overflow-hidden py-24 lg:py-32'. Inner div: class='max-w-4xl mx-auto px-6 text-center space-y-8'.\n"
-                f"  - Quiz/app containers: MUST have class='max-w-4xl mx-auto px-6' wrapper div. Without max-w + mx-auto, content bleeds to the left edge.\n"
-                f"  - NEVER place content directly inside <body> or <main> without a centering wrapper div.\n"
-                f"QUIZ STRUCTURE (wrong nesting = invisible questions):\n"
-                f"  - 'question-area' div and 'result-screen' div are SIBLINGS inside the same centering wrapper. NEVER nest question-area inside result-screen.\n"
-                f"  - 'result-screen' starts with class='hidden'. 'question-area' starts WITHOUT hidden.\n"
-                f"  - To end quiz: el.className='hidden' on question-area, then el.className='...' on result-screen.\n"
-                f"  - Every span/button injected via innerHTML MUST include an explicit text color class (e.g. class='text-zinc-200'). Without it, text is invisible on dark backgrounds.\n"
-                f"JS RULES (violations break the page):\n"
-                f"  1. Data arrays go first. Quiz option strings = plain answer words only (e.g. \"Paris\") — NEVER \"A) Paris\". Render the A/B/C/D badge letter separately.\n"
-                f"  2. Write ALL data items in full. No '// Add more questions as needed' or any placeholder comment in arrays.\n"
-                f"  3. NEVER call getElementById('x') unless id=\"x\" exists as a real static HTML element — mismatch = TypeError crash.\n"
-                f"  4. NEVER use classList.add/remove/toggle. Use: el.className = '...full new class string...' to change styles.\n"
-                f"  5. Use event.target.closest('[data-index]') for option click delegation, not event.target.getAttribute.\n"
-                f"  6. Call lucide.createIcons() at script end AND after any innerHTML injection that adds data-lucide icons.\n"
-                f"REQUIRED in <head>: <script src=\"https://cdn.tailwindcss.com\"></script> + Google Font <link> + <script src=\"https://cdn.jsdelivr.net/npm/lucide@latest\"></script>.\n"
-            )
-        elif not _is_large_model:
-            pass
+        # matched_db from elements_db provides the complete styling directives
         # large/max: no extra directive injected — the large_prompt.txt system prompt
         # and the DB palette above give the model everything it needs
 
@@ -1375,8 +1347,9 @@ def run_stream(user_query: str, history: list, retriever: Any, settings: dict, i
     if history:
         optimized = [{"role": m["role"], "content": m["content"]} for m in history] + optimized
         
+    _sz = settings.get("size", "tiny") if isinstance(settings, dict) else "tiny"
     try:
-        if is_complex:
+        if is_complex and not is_web_design and _sz not in ["tiny", "small"]:
             yield from _run_complex_coding(user_query, history, optimized, context, retriever, settings)
         else:
             yield from _run_simple_coding(user_query, history, optimized, settings)

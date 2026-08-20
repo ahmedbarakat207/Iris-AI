@@ -1694,13 +1694,20 @@ def run_stream(
     final_query = user_query
 
     if is_web_design:
-        _sz = settings.get("size", "tiny")
-        if _sz in ["large", "max"]:
-            try:
-                from src.web.elements_db import scan_query_for_elements
+        try:
+            from src.web.elements_db import scan_query_for_elements
 
-                final_query += "\n" + scan_query_for_elements(user_query)
-            except ImportError:
+            matched_db = scan_query_for_elements(user_query)
+            if matched_db:
+                final_query += "\n" + matched_db
+        except Exception:
+            try:
+                from src.elements_db import scan_query_for_elements
+
+                matched_db = scan_query_for_elements(user_query)
+                if matched_db:
+                    final_query += "\n" + matched_db
+            except Exception:
                 pass
 
     if context:
@@ -1779,8 +1786,9 @@ def run_stream(
             {"role": m["role"], "content": m["content"]} for m in history
         ] + optimized
 
+    _sz = settings.get("size", "tiny") if isinstance(settings, dict) else "tiny"
     try:
-        if is_complex:
+        if is_complex and not is_web_design and _sz not in ["tiny", "small"]:
             yield from _run_complex_coding(
                 user_query, history, optimized, context, retriever, settings
             )

@@ -108,12 +108,11 @@ def run_stream(
             if ev["type"] == "token":
                 ev["content"] = ev["content"].replace("`", "").replace("~", "")
                 full += ev["content"]
+            elif ev["type"] == "thinking":
+                thought_process += ev["content"]
 
             if user_lang == "English" or ev["type"] != "token":
                 yield ev
-
-            elif ev["type"] == "thinking":
-                thought_process += ev["content"]
 
         thought_clean = thought_process.strip()
         thought_clean = re.sub(
@@ -165,9 +164,16 @@ def run_stream(
             and "```" not in cleaned_answer
             and bool(_REFUSAL_PHRASES.match(cleaned_answer))
         )
+
+        _META_LEAK_PHRASES = re.compile(
+            r"^(?:\[?final response\]?|we (?:cannot|must|need to|should)|also need to|must not mention|given constraints:|now we have search results)",
+            re.IGNORECASE,
+        )
+        _is_meta_hallucination = bool(_META_LEAK_PHRASES.search(cleaned_answer))
         _is_collapsed = (
             len(cleaned_answer) < 5
             or bool(_EVASION_PHRASES.match(cleaned_answer))
+            or _is_meta_hallucination
             or _is_refusal
         )
 
@@ -208,12 +214,11 @@ def run_stream(
                 if ev["type"] == "token":
                     ev["content"] = ev["content"].replace("`", "").replace("~", "")
                     retry_full += ev["content"]
+                elif ev["type"] == "thinking":
+                    retry_thought += ev["content"]
 
                 if user_lang == "English" or ev["type"] != "token":
                     yield ev
-
-                elif ev["type"] == "thinking":
-                    retry_thought += ev["content"]
 
             retry_answer = retry_full.strip()
             retry_answer = re.sub(

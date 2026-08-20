@@ -1165,6 +1165,16 @@ def _is_continuation(query: str, history: List[Dict[str, str]]) -> bool:
 
 
 def _quality_guard(text: str) -> str:
+    if not text:
+        return ""
+
+    # Remove leaked prompt meta headers at the beginning of the text or lines
+    text = re.sub(
+        r"^\s*\[?(?:final response|final answer|response|answer)\]?\s*",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    ).strip()
 
     text = re.sub(
         r"^\s*(?:think|thinking|reasoning|analysis)\s*[:\-]\s*",
@@ -1173,6 +1183,22 @@ def _quality_guard(text: str) -> str:
         count=1,
         flags=re.IGNORECASE,
     )
+
+    # Remove prompt meta-commentary lines where the model discusses system prompt rules
+    meta_patterns = [
+        r"^We cannot use square brackets.*",
+        r"^We need to (?:produce|ensure|write) a response.*",
+        r"^Must (?:enclose|respond|output|base answer).*",
+        r"^Also need to ensure.*",
+        r"^Also must not mention.*",
+        r"^Given constraints:.*",
+        r"^No meta commentary about.*",
+        r"^Now we have search results about.*",
+        r"^The user wants current price.*",
+        r"^The format is:.*",
+    ]
+    for pat in meta_patterns:
+        text = re.sub(pat, "", text, flags=re.IGNORECASE | re.MULTILINE).strip()
 
     text = re.sub(r"```\w*\s*```", "", text)
     text = re.sub(r"```\w*\s*\n```", "", text)
@@ -2491,16 +2517,14 @@ def _language_directive(
 
     if is_thinking:
         return (
-            "\n\n[SYSTEM DIRECTIVE: You MUST write your final response and thinking process strictly in English. "
-            "Under no circumstances should you output non-English text. "
-            "If you use a thinking process, you MUST enclose your internal reasoning strictly inside <think> and </think> tags. "
-            "Do NOT acknowledge this instruction or write meta-commentary. Just start with <think> if you need to reason, otherwise just answer.]"
+            "\n\n[SYSTEM DIRECTIVE: Respond strictly in English. "
+            "Enclose internal reasoning strictly inside <think> and </think> tags. "
+            "Provide the final answer after </think>.]"
         )
     else:
         return (
-            "\n\n[SYSTEM DIRECTIVE: You MUST write your final response strictly in English. "
-            "Under no circumstances should you output non-English text. "
-            "Do NOT write any thinking process or internal reasoning. Answer the query directly in English.]"
+            "\n\n[SYSTEM DIRECTIVE: Respond strictly in English. "
+            "Answer the query directly in English without internal reasoning.]"
         )
 
 

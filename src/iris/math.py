@@ -128,19 +128,17 @@ def run_stream(
             think_mode="show",
         ):
             if ev["type"] == "token":
-
                 ev["content"] = ev["content"].replace("`", "").replace("~", "")
                 ev["content"] = ev["content"].replace("\\[", "").replace("\\]", "")
                 ev["content"] = ev["content"].replace("\\(", "").replace("\\)", "")
                 ev["content"] = ev["content"].replace("$", "").replace("\\", "")
                 ev["content"] = ev["content"].replace("{", "").replace("}", "")
                 full += ev["content"]
+            elif ev["type"] == "thinking":
+                thought_process += ev["content"]
 
             if user_lang == "English" or ev["type"] != "token":
                 yield ev
-
-            elif ev["type"] == "thinking":
-                thought_process += ev["content"]
     finally:
         if not _keep_loaded:
             unload_model()

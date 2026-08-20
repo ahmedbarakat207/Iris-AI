@@ -1766,10 +1766,25 @@ def run_stream(
 
         final_query += (
             "\n\n[COMPLETENESS MANDATE — LONG & COMPLETE CODE]\n"
-            "You MUST generate an extensive, long-form, and complete single-file website. "
-            "Do NOT output short or simplified snippets. Include a full navigation header, rich hero with CTA buttons, "
-            "4 to 6 detailed product/feature cards with full specs and prices, feature highlight section, customer reviews, "
-            "full interactive JavaScript (search filter, category filter, shopping cart drawer, modals), and footer inside index.html."
+            "You MUST generate an extensive, long-form, complete single-file website. "
+            "Do NOT output short or simplified snippets.\n\n"
+            "DARK THEME IS MANDATORY:\n"
+            "- body class MUST start with: bg-slate-950 text-slate-100\n"
+            "- ALL sections use: bg-slate-900, bg-slate-800, bg-zinc-900, or dark gradients like from-slate-950 to-slate-900\n"
+            "- NO light colors anywhere: NO bg-white, NO bg-gray-100, NO bg-teal-200, NO from-teal-100, NO to-white\n\n"
+            "NO PLACEHOLDER TEXT — EVER:\n"
+            "- Every product card MUST have a REAL specific product name (e.g. 'HP Spectre x360 16', 'HP OMEN Transcend 16', 'HP Victus 15')\n"
+            "- Every price MUST be a real value (e.g. '$1,299', '$899')\n"
+            "- Every description MUST be fully written, specific, and detailed — never 'description here' or generic filler\n"
+            "- Images use real Unsplash laptop URLs or SVG laptop illustrations, never alt-text-only broken images\n\n"
+            "REQUIRED SECTIONS (ALL MUST BE PRESENT):\n"
+            "1. Fixed navbar with logo, links, search bar, cart badge\n"
+            "2. Hero section with gradient headline, subtitle, 2 CTA buttons\n"
+            "3. Category filter tabs + 6 detailed product cards\n"
+            "4. Tech highlights (3 feature cards with icons)\n"
+            "5. Customer reviews section (3 testimonials)\n"
+            "6. Full JavaScript: search filter, category filter, cart counter, spec modals\n"
+            "7. Footer\n"
         )
 
     if context:

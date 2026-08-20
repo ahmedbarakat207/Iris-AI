@@ -588,6 +588,44 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
 
     text = re.sub(r'body\s*\{[^}]*\}', _fix_body_css_bg, text, flags=re.IGNORECASE)
 
+    # 5c. Fix light gradient backgrounds on sections/divs (hero sections etc.)
+    # Replace "from-teal-*", "from-cyan-[1-4]xx", "from-white" etc. on containers with dark equivalents
+    _LIGHT_FROM_PATTERN = re.compile(
+        r'\bfrom-(?:white|teal-[0-4]\d{2}|cyan-[0-4]\d{2}|sky-[0-4]\d{2}|'
+        r'gray-[0-4]\d{2}|slate-[0-4]\d{2}|zinc-[0-4]\d{2}|green-[0-4]\d{2}|'
+        r'blue-[0-4]\d{2}|indigo-[0-4]\d{2}|emerald-[0-4]\d{2}|amber-\d{2,3}|'
+        r'yellow-\d{2,3}|orange-\d{2,3}|lime-\d{2,3}|neutral-[0-4]\d{2})\b',
+        re.IGNORECASE
+    )
+    _LIGHT_TO_PATTERN = re.compile(
+        r'\bto-(?:white|teal-[0-4]\d{2}|cyan-[0-4]\d{2}|sky-[0-4]\d{2}|'
+        r'gray-[0-4]\d{2}|slate-[0-4]\d{2}|zinc-[0-4]\d{2}|green-[0-4]\d{2}|'
+        r'blue-[0-4]\d{2}|indigo-[0-4]\d{2}|emerald-[0-4]\d{2}|amber-\d{2,3}|'
+        r'yellow-\d{2,3}|orange-\d{2,3}|lime-\d{2,3}|neutral-[0-4]\d{2})\b',
+        re.IGNORECASE
+    )
+
+    def _fix_section_bg(match):
+        tag_str = match.group(0)
+        tag_str = _LIGHT_BG_PATTERN.sub('bg-slate-900', tag_str)
+        tag_str = _LIGHT_FROM_PATTERN.sub('from-slate-900', tag_str)
+        tag_str = _LIGHT_TO_PATTERN.sub('to-slate-950', tag_str)
+        return tag_str
+
+    # Apply to section, main, header, footer, and div tags with hero/section-like classes
+    text = re.sub(
+        r'<(?:section|main|header|footer|div)[^>]*class=["\'][^"\']*(?:from-|to-|bg-)[^"\']*["\'][^>]*>',
+        _fix_section_bg,
+        text,
+        flags=re.IGNORECASE
+    )
+
+    # 5d. Replace placeholder text like "Laptop Name 1", "Item Name", "Product Name", "[...]"
+    text = re.sub(r'\[(?:Laptop|Product|Item|Image|Photo|Brand|Name|Title)\s*(?:Image|Photo|Name|1|2|3)?\]',
+                  '', text, flags=re.IGNORECASE)
+    text = re.sub(r'(?:Laptop|Product|Item)\s+Name\s+\d+', 'HP Spectre x360', text)
+    text = re.sub(r'(?:Laptop|Product|Item)\s+Description\s*(?:\d+)?', 'Premium Intel Core Ultra laptop with 2.8K OLED display', text)
+
     # 6. Ensure lucide.createIcons() is called before </body>
     if "createicons" not in text.lower() and "lucide" in text.lower():
         init_script = "\n  <script>\n    if (window.lucide) { lucide.createIcons(); }\n  </script>\n"

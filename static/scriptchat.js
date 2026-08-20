@@ -27,6 +27,45 @@ function triggerDownload(filename, content) {
     URL.revokeObjectURL(url);
 }
 
+function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(() => fallbackCopyTextToClipboard(text));
+    }
+    return fallbackCopyTextToClipboard(text);
+}
+
+function fallbackCopyTextToClipboard(text) {
+    return new Promise((resolve, reject) => {
+        try {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.width = "2em";
+            textArea.style.height = "2em";
+            textArea.style.padding = "0";
+            textArea.style.border = "none";
+            textArea.style.outline = "none";
+            textArea.style.boxShadow = "none";
+            textArea.style.background = "transparent";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            if (successful) {
+                resolve();
+            } else {
+                reject(new Error('execCommand copy failed'));
+            }
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     let chats = (JSON.parse(localStorage.getItem('iris_chats')) || []).filter(c => c.messages && c.messages.length > 0);
     let currentChatId = null;
@@ -1542,10 +1581,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.copyToClipboard = (btn) => {
         const container = btn.closest('.code-container');
-        const codeElement = container.querySelector('pre code');
-        const text = codeElement.textContent;
+        const codeElement = container ? container.querySelector('pre code') : null;
+        const text = codeElement ? codeElement.textContent : '';
 
-        navigator.clipboard.writeText(text).then(() => {
+        copyTextToClipboard(text).then(() => {
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<span>✓ Copied!</span>';
             btn.classList.add('copied');
@@ -2464,13 +2503,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
 
     document.getElementById('cvCopyBtn').addEventListener('click', () => {
-        const text = document.getElementById('cvCode').textContent;
-        navigator.clipboard.writeText(text).then(() => {
+        const text = currentViewerCode || document.getElementById('cvCode').innerText || document.getElementById('cvCode').textContent;
+        copyTextToClipboard(text).then(() => {
             const btn = document.getElementById('cvCopyBtn');
             const orig = btn.innerHTML;
-            btn.innerHTML = '✓ Copied!';
+            btn.innerHTML = `
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Copied!
+            `;
             btn.style.color = '#a385ff';
             setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1800);
+        }).catch(err => {
+            console.error('Failed to copy code viewer content: ', err);
         });
     });
 

@@ -54,7 +54,12 @@
 
 input, textarea, [contenteditable="true"],
 .message-content,
-.message-content * {
+.message-content *,
+.code-viewer-body,
+.code-viewer-body *,
+.code-viewer-filename,
+.code-container pre,
+.code-container code {
     user-select: text !important;
     -webkit-user-select: text !important;
     -moz-user-select: text !important;
@@ -2855,13 +2860,17 @@ body.chat-active .footere {
     overflow: hidden;
 }
 
+.code-viewer-gutters,
 .code-viewer-gutter-line {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 12px;
     line-height: 1.65;
     color: #3a3a50;
     padding-right: 12px;
-    user-select: none;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
 }
 
 .code-viewer-body {
@@ -2870,6 +2879,9 @@ body.chat-active .footere {
     padding: 20px 24px;
     scrollbar-width: thin;
     scrollbar-color: #2a2a3a transparent;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
 }
 
 .code-viewer-body::-webkit-scrollbar {
@@ -2883,6 +2895,9 @@ body.chat-active .footere {
 
 .code-viewer-body pre {
     margin: 0;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
 }
 
 .code-viewer-body code {
@@ -2892,6 +2907,15 @@ body.chat-active .footere {
     line-height: 1.65;
     white-space: pre;
     display: block;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+}
+
+.code-viewer-body code div {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
 }
 
 .code-viewer-footer {

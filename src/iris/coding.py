@@ -1701,9 +1701,7 @@ def run_stream(
 
                 final_query += "\n" + scan_query_for_elements(user_query)
             except ImportError:
-                final_query += _generate_design_directive()
-        else:
-            final_query += _generate_design_directive()
+                pass
 
     if context:
         final_query = (

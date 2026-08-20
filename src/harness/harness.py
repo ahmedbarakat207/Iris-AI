@@ -540,13 +540,15 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
         if class_match:
             classes = class_match.group(2)
             new_classes = classes
-            if not re.search(r"\bbg-", classes):
-                new_classes = f"bg-zinc-950 {new_classes}".strip()
-            if not re.search(r"\btext-", classes):
+            # If body has ugly solid brown/yellow/amber saturated background, normalize to slate-950
+            new_classes = re.sub(r'\bbg-(?:amber|yellow|orange|brown)-\d{2,3}\b', 'bg-slate-950', new_classes)
+            if not re.search(r"\bbg-", new_classes):
+                new_classes = f"bg-slate-950 {new_classes}".strip()
+            if not re.search(r"\btext-", new_classes):
                 new_classes = f"{new_classes} text-zinc-100".strip()
-            if "min-h-screen" not in classes:
+            if "min-h-screen" not in new_classes:
                 new_classes = f"{new_classes} min-h-screen".strip()
-            if "overflow-x-hidden" not in classes:
+            if "overflow-x-hidden" not in new_classes:
                 new_classes = f"{new_classes} overflow-x-hidden".strip()
 
             fixed_attrs = (
@@ -556,7 +558,7 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
             )
             return f"<body{fixed_attrs}>"
         else:
-            return f'<body class="bg-zinc-950 text-zinc-100 min-h-screen relative overflow-x-hidden"{attrs}>'
+            return f'<body class="bg-slate-950 text-zinc-100 min-h-screen relative overflow-x-hidden"{attrs}>'
 
     text = re.sub(r"<body([^>]*)>", _fix_body_tag, text, count=1, flags=re.IGNORECASE)
 
@@ -593,28 +595,41 @@ def repair_html(text: str, language: str = "") -> Tuple[str, List[str]]:
         tag = match.group(1).lower()
         attrs = match.group(2)
         inner = match.group(3)
-        if "class=" not in attrs.lower() and any(
-            w in inner.lower()
-            for w in [
-                "shop",
-                "buy",
-                "order",
-                "explore",
-                "get started",
-                "book",
-                "contact",
-                "learn more",
-            ]
-        ):
-            return f'<{tag}{attrs} class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20">{inner}</{tag}>'
+        if "class=" not in attrs.lower():
+            if any(
+                w in inner.lower()
+                for w in [
+                    "shop",
+                    "buy",
+                    "order",
+                    "explore",
+                    "get started",
+                    "book",
+                    "start",
+                ]
+            ):
+                return f'<{tag}{attrs} class="inline-flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20">{inner}</{tag}>'
+            elif any(
+                w in inner.lower()
+                for w in ["contact", "learn more", "view", "details", "about"]
+            ):
+                return f'<{tag}{attrs} class="inline-flex items-center justify-center bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300">{inner}</{tag}>'
+            elif any(
+                w in inner.lower()
+                for w in ["home", "products", "services", "features", "pricing", "testimonials"]
+            ):
+                return f'<{tag}{attrs} class="text-zinc-400 hover:text-white px-3 py-1.5 text-sm font-medium transition-colors">{inner}</{tag}>'
         return match.group(0)
 
     text = re.sub(
-        r"<(a|button)([^>]*)>([^<]{2,30})</\1>",
+        r"<(a|button)([^>]*)>([^<]{2,40})</\1>",
         _fix_bare_cta,
         text,
         flags=re.IGNORECASE,
     )
+
+    # 9. Clean up broken img tags or placeholder blob images
+    text = re.sub(r'<img[^>]*src=["\'](?:blob:[^"\']*|["\'])[^>]*>', '', text, flags=re.IGNORECASE)
 
     return (text, warnings)
 

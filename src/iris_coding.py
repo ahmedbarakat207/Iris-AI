@@ -1314,8 +1314,7 @@ def run_stream(user_query: str, history: list, retriever: Any, settings: dict, i
                 f"REQUIRED in <head>: <script src=\"https://cdn.tailwindcss.com\"></script> + Google Font <link> + <script src=\"https://cdn.jsdelivr.net/npm/lucide@latest\"></script>.\n"
             )
         elif not _is_large_model:
-            # medium model: standard design directive
-            final_query += _generate_design_directive()
+            pass
         # large/max: no extra directive injected — the large_prompt.txt system prompt
         # and the DB palette above give the model everything it needs
 

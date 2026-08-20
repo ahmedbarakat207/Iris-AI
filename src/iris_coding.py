@@ -1326,8 +1326,6 @@ def run_stream(user_query: str, history: list, retriever: Any, settings: dict, i
             matched_db = scan_query_for_elements(user_query)
             if matched_db:
                 if _is_large_model:
-                    # For large/max: frame DB directives as a creative palette brief,
-                    # not as rigid constraints — the model should own the design decisions
                     final_query += (
                         "\n\n[CREATIVE PALETTE — FROM IRIS DESIGN DATABASE]\n"
                         "The following directives are your creative palette for this request. "
@@ -1339,10 +1337,14 @@ def run_stream(user_query: str, history: list, retriever: Any, settings: dict, i
                     final_query += "\n" + matched_db
         except Exception as e:
             logger.warning(f"Failed to scan elements DB: {e}")
-        
-        # matched_db from elements_db provides the complete styling directives
-        # large/max: no extra directive injected — the large_prompt.txt system prompt
-        # and the DB palette above give the model everything it needs
+
+        final_query += (
+            "\n\n[COMPLETENESS MANDATE — LONG & COMPLETE CODE]\n"
+            "You MUST generate an extensive, long-form, and complete single-file website. "
+            "Do NOT output short or simplified snippets. Include a full navigation header, rich hero with CTA buttons, "
+            "4 to 6 detailed product/feature cards with full specs and prices, feature highlight section, customer reviews, "
+            "full interactive JavaScript (search filter, category filter, shopping cart drawer, modals), and footer inside index.html."
+        )
 
     if context:
         final_query = (

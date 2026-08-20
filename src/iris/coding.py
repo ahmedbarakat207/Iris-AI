@@ -1764,6 +1764,14 @@ def run_stream(
             except Exception:
                 pass
 
+        final_query += (
+            "\n\n[COMPLETENESS MANDATE — LONG & COMPLETE CODE]\n"
+            "You MUST generate an extensive, long-form, and complete single-file website. "
+            "Do NOT output short or simplified snippets. Include a full navigation header, rich hero with CTA buttons, "
+            "4 to 6 detailed product/feature cards with full specs and prices, feature highlight section, customer reviews, "
+            "full interactive JavaScript (search filter, category filter, shopping cart drawer, modals), and footer inside index.html."
+        )
+
     if context:
         final_query = (
             f"<retrieved_context>\n{context}\n</retrieved_context>\n\n"

@@ -177,21 +177,16 @@ def classify_task(
         )
         return TaskType.CODING_COMPLEX, None
 
-    web_tech = [r"\btailwind\b", r"\bhtml\b", r"\bcss\b", r"\breact\b"]
-    web_intent = [
-        r"\bbuild\b",
-        r"\blanding page\b",
-        r"\bwebsite\b",
-        r"\bموقع\b",
-        r"\bصفحة\b",
-        r"\bصمم\b",
-        r"\bبرمج\b",
+    web_coding_patterns = [
+        r"\b(?:make|create|build|write|code|develop|design|generate)\b.*?\b(?:website|webpage|web page|web app|webapp|landing page|frontend|front-end|ui|dashboard|site|game)\b",
+        r"\b(?:website|webpage|web page|web app|webapp|landing page)\b",
+        r"\b(?:tailwind|html|css|react|vue|svelte|javascript|typescript|nextjs|vite|bootstrap|flask|django|fastapi)\b",
+        r"\b(?:write|code|build|make|create)\b.*?\b(?:script|program|app|function|class|algorithm|scraper|bot|component)\b",
+        r"\b(?:موقع|صفحة|تطبيق|برمج|كود|صمم موقع)\b",
     ]
-    if any(re.search(tech, lower_query) for tech in web_tech) and any(
-        re.search(intent, lower_query) for intent in web_intent
-    ):
+    if any(re.search(pat, lower_query) for pat in web_coding_patterns):
         logger.info(
-            "[Triage] Hardcoded intercept: Web development query detected. Routing to CODING_COMPLEX."
+            "[Triage] Hardcoded intercept: Software/Web development query detected. Routing to CODING_COMPLEX."
         )
         return TaskType.CODING_COMPLEX, None
 
